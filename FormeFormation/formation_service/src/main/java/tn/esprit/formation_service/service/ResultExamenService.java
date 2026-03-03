@@ -14,4 +14,5 @@ public interface ResultExamenService {
     List<ResultExamen> findByUser_id(Long user_id);
     void deleteById(Long id);
     ResultExamen update(Long id, ResultExamen resultExamen);
+    void deleteByUserIdAndFormationId(Long userId, Long formationId);
 }

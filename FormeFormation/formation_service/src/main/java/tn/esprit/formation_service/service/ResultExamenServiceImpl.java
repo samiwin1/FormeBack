@@ -61,4 +61,10 @@ public class ResultExamenServiceImpl implements ResultExamenService {
         resultExamen.setId(existing.getId());
         return resultExamenRepository.save(resultExamen);
     }
+
+    @Override
+    @Transactional
+    public void deleteByUserIdAndFormationId(Long userId, Long formationId) {
+        resultExamenRepository.deleteByUser_idAndExamen_Formation_Id(userId, formationId);
+    }
 }

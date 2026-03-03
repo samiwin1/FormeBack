@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/contenus-formation")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ContenuFormationController {
 
     private final ContenuFormationService contenuFormationService;

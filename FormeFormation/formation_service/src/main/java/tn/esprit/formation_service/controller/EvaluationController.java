@@ -15,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/evaluations")
-@CrossOrigin(origins = "http://localhost:4200")
 public class EvaluationController {
 
     private final EvaluationService evaluationService;

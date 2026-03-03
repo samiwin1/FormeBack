@@ -5,19 +5,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.formation_service.dto.ExamHistoryItem;
 import tn.esprit.formation_service.entity.Examen;
+import tn.esprit.formation_service.entity.ResultExamen;
+import tn.esprit.formation_service.service.ExamEngineService;
 import tn.esprit.formation_service.service.ExamenService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/examens")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ExamenController {
 
     private final ExamenService examenService;
+    private final ExamEngineService examEngineService;
 
-    public ExamenController(ExamenService examenService) {
+    public ExamenController(ExamenService examenService, ExamEngineService examEngineService) {
         this.examenService = examenService;
+        this.examEngineService = examEngineService;
+    }
+
+    @PostMapping("/{id}/start")
+    public ResponseEntity<ResultExamen> startExam(@PathVariable Long id, @RequestParam Long userId) {
+        ResultExamen result = examEngineService.startExam(id, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/history")

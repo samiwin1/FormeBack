@@ -3,20 +3,43 @@ package tn.esprit.formation_service.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.formation_service.dto.SaveAnswerRequest;
 import tn.esprit.formation_service.entity.ResultExamen;
+import tn.esprit.formation_service.service.ExamEngineService;
 import tn.esprit.formation_service.service.ResultExamenService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/result-examens")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ResultExamenController {
 
     private final ResultExamenService resultExamenService;
+    private final ExamEngineService examEngineService;
 
-    public ResultExamenController(ResultExamenService resultExamenService) {
+    public ResultExamenController(ResultExamenService resultExamenService, ExamEngineService examEngineService) {
         this.resultExamenService = resultExamenService;
+        this.examEngineService = examEngineService;
+    }
+
+    @PostMapping("/{id}/save-answer")
+    public ResponseEntity<Void> saveAnswer(@PathVariable Long id, @RequestBody SaveAnswerRequest request) {
+        Map<String, Integer> answers = request.getAnswers() != null ? request.getAnswers() : Map.of();
+        examEngineService.saveAnswer(id, answers);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<ResultExamen> submitExam(@PathVariable Long id) {
+        ResultExamen result = examEngineService.submitExam(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/remaining-time")
+    public ResponseEntity<Map<String, Integer>> getRemainingTime(@PathVariable Long id) {
+        int remaining = examEngineService.getRemainingSeconds(id);
+        return ResponseEntity.ok(Map.of("remainingSeconds", remaining));
     }
 
     @PostMapping

@@ -1,6 +1,7 @@
 package tn.esprit.formation_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -49,4 +50,9 @@ public class ResultExamen {
     public void setScore(Integer score) { this.score = score; }
     public Boolean getPassed() { return passed; }
     public void setPassed(Boolean passed) { this.passed = passed; }
+
+    @JsonProperty("examen_id")
+    public Long getExamenId() {
+        return examen != null ? examen.getId() : null;
+    }
 }

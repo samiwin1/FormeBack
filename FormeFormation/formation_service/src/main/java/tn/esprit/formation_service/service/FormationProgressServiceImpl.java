@@ -20,13 +20,16 @@ public class FormationProgressServiceImpl implements FormationProgressService {
     private final FormationService formationService;
     private final ContenuFormationService contenuFormationService;
     private final ResultEvaluationService resultEvaluationService;
+    private final ValidationService validationService;
 
     public FormationProgressServiceImpl(FormationService formationService,
                                          ContenuFormationService contenuFormationService,
-                                         ResultEvaluationService resultEvaluationService) {
+                                         ResultEvaluationService resultEvaluationService,
+                                         ValidationService validationService) {
         this.formationService = formationService;
         this.contenuFormationService = contenuFormationService;
         this.resultEvaluationService = resultEvaluationService;
+        this.validationService = validationService;
     }
 
     @Override
@@ -53,20 +56,23 @@ public class FormationProgressServiceImpl implements FormationProgressService {
 
         for (int i = 0; i < blocks.size(); i++) {
             ContenuFormation block = blocks.get(i);
-            Evaluation prevBlockEval = i > 0 ? blocks.get(i - 1).getEvaluation() : null;
             Evaluation thisBlockEval = block.getEvaluation();
 
             boolean unlocked;
             boolean evaluationPassed;
 
-            if (i == 0) {
-                unlocked = true;
-                evaluationPassed = thisBlockEval == null || passedEvaluationIds.contains(thisBlockEval.getId());
-            } else {
-                boolean prevEvalPassed = prevBlockEval == null || passedEvaluationIds.contains(prevBlockEval.getId());
-                unlocked = prevEvalPassed;
-                evaluationPassed = thisBlockEval == null || passedEvaluationIds.contains(thisBlockEval.getId());
+            // Block N is unlocked only when user has passed ALL evaluations from blocks 0..N-1
+            boolean computedUnlocked = true;
+            for (int j = 0; j < i; j++) {
+                Evaluation eval = blocks.get(j).getEvaluation();
+                if (eval != null && !passedEvaluationIds.contains(eval.getId())) {
+                    computedUnlocked = false;
+                    break;
+                }
             }
+            unlocked = computedUnlocked;
+
+            evaluationPassed = thisBlockEval == null || passedEvaluationIds.contains(thisBlockEval.getId());
 
             if (thisBlockEval != null) {
                 blockLinkedEvaluationIds.add(thisBlockEval.getId());
@@ -97,6 +103,10 @@ public class FormationProgressServiceImpl implements FormationProgressService {
                 ? Math.round(((double) completedStepsCount / totalSteps) * 100.0)
                 : 0.0;
 
-        return Optional.of(new FormationProgressResponse(content, examEligible, completionPercentage));
+        String formationStatus = (userId != null && validationService.isFormationCompleted(userId, formationId))
+                ? FormationProgressResponse.STATUS_COMPLETED
+                : FormationProgressResponse.STATUS_IN_PROGRESS;
+
+        return Optional.of(new FormationProgressResponse(content, examEligible, completionPercentage, formationStatus));
     }
 }

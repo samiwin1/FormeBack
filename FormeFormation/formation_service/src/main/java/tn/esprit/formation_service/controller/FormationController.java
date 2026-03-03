@@ -8,32 +8,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.formation_service.dto.FormationProgressResponse;
 import tn.esprit.formation_service.entity.Formation;
+import tn.esprit.formation_service.service.ContentLockService;
 import tn.esprit.formation_service.service.FormationProgressService;
 import tn.esprit.formation_service.service.FormationSearchService;
 import tn.esprit.formation_service.service.FormationService;
 import tn.esprit.formation_service.service.ResultEvaluationService;
+import tn.esprit.formation_service.service.ResultExamenService;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/formations")
-@CrossOrigin(origins = "http://localhost:4200")
 public class FormationController {
 
     private final FormationService formationService;
     private final FormationProgressService formationProgressService;
     private final FormationSearchService formationSearchService;
     private final ResultEvaluationService resultEvaluationService;
+    private final ResultExamenService resultExamenService;
+    private final ContentLockService contentLockService;
 
     public FormationController(
             FormationService formationService,
             FormationProgressService formationProgressService,
             FormationSearchService formationSearchService,
-            ResultEvaluationService resultEvaluationService) {
+            ResultEvaluationService resultEvaluationService,
+            ResultExamenService resultExamenService,
+            ContentLockService contentLockService) {
         this.formationService = formationService;
         this.formationProgressService = formationProgressService;
         this.formationSearchService = formationSearchService;
         this.resultEvaluationService = resultEvaluationService;
+        this.resultExamenService = resultExamenService;
+        this.contentLockService = contentLockService;
     }
 
     @PostMapping
@@ -61,6 +68,8 @@ public class FormationController {
             return ResponseEntity.notFound().build();
         }
         resultEvaluationService.deleteByUserIdAndFormationId(userId, formationId);
+        resultExamenService.deleteByUserIdAndFormationId(userId, formationId);
+        contentLockService.resetLocksForFormation(formationId);
         return ResponseEntity.noContent().build();
     }
 

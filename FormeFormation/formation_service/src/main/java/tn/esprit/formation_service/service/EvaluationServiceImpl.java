@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.formation_service.dto.EvaluationHistoryItem;
 import tn.esprit.formation_service.dto.EvaluationSubmitResponse;
+import tn.esprit.formation_service.dto.IncorrectAnswerItem;
 import tn.esprit.formation_service.entity.Evaluation;
 import tn.esprit.formation_service.entity.Formation;
 import tn.esprit.formation_service.entity.ResultEvaluation;
@@ -28,13 +29,16 @@ public class EvaluationServiceImpl implements EvaluationService {
     private final EvaluationRepository evaluationRepository;
     private final FormationRepository formationRepository;
     private final ResultEvaluationService resultEvaluationService;
+    private final GeminiApiService geminiApiService;
 
     public EvaluationServiceImpl(EvaluationRepository evaluationRepository,
                                  FormationRepository formationRepository,
-                                 ResultEvaluationService resultEvaluationService) {
+                                 ResultEvaluationService resultEvaluationService,
+                                 GeminiApiService geminiApiService) {
         this.evaluationRepository = evaluationRepository;
         this.formationRepository = formationRepository;
         this.resultEvaluationService = resultEvaluationService;
+        this.geminiApiService = geminiApiService;
     }
 
     @Override
@@ -114,8 +118,17 @@ public class EvaluationServiceImpl implements EvaluationService {
         resultEvaluationService.save(result);
 
         int remainingAttempts = Math.max(0, maxAttempts - (attemptCount + 1));
+        int attemptNumber = attemptCount + 1;
 
-        return new EvaluationSubmitResponse(score, passed, remainingAttempts, attemptCount + 1);
+        List<IncorrectAnswerItem> mistakeExplanations = null;
+        if (attemptNumber == 2 && !passed && evaluation.getContent() != null && !evaluation.getContent().isBlank()) {
+            List<IncorrectAnswerItem> incorrectItems = QuizScoringUtil.extractIncorrectAnswers(evaluation.getContent(), answers);
+            if (!incorrectItems.isEmpty()) {
+                mistakeExplanations = geminiApiService.explainMistakes(incorrectItems, evaluation.getTitle() != null ? evaluation.getTitle() : "Quiz");
+            }
+        }
+
+        return new EvaluationSubmitResponse(score, passed, remainingAttempts, attemptNumber, mistakeExplanations);
     }
 
     @Override
