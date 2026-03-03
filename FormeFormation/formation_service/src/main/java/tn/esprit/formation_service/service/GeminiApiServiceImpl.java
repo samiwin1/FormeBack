@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import tn.esprit.formation_service.dto.GlobalAnalyticsResponse;
 import tn.esprit.formation_service.dto.IncorrectAnswerItem;
+import tn.esprit.formation_service.exception.GeminiApiException;
 
 import java.util.*;
 
@@ -75,19 +77,14 @@ public class GeminiApiServiceImpl implements GeminiApiService {
     public String generateFormationStructure(String title, String description, String objectives,
                                              String level, String skillsTargeted, int numberOfContentBlocks) {
         if (!isApiKeyConfigured()) {
-            return null;
+            throw new GeminiApiException("Gemini API key is not configured. Add gemini.api.key in application.properties.");
         }
-        try {
-            String prompt = buildFormationPrompt(title, description, objectives, level, skillsTargeted, numberOfContentBlocks);
-            String responseText = callGemini(prompt, 8192);
-            if (responseText == null || responseText.isBlank()) {
-                return null;
-            }
-            return stripMarkdownJson(responseText);
-        } catch (Exception e) {
-            log.warn("Gemini generateFormationStructure failed: {}", e.getMessage());
-            return null;
+        String prompt = buildFormationPrompt(title, description, objectives, level, skillsTargeted, numberOfContentBlocks);
+        String responseText = callGeminiForFormation(prompt, 8192);
+        if (responseText == null || responseText.isBlank()) {
+            throw new GeminiApiException("AI did not return a valid formation structure.");
         }
+        return stripMarkdownJson(responseText);
     }
 
     @Override
@@ -111,8 +108,33 @@ public class GeminiApiServiceImpl implements GeminiApiService {
         }
     }
 
+    /**
+     * Calls Gemini for formation generation. On 503 (high demand), retries with gemini-1.5-flash.
+     * Throws GeminiApiException with the actual API error message on failure.
+     */
+    private String callGeminiForFormation(String prompt, int maxTokens) {
+        try {
+            return callGeminiWithModel(prompt, maxTokens, model);
+        } catch (GeminiApiException e) {
+            if (e.getMessage() != null && e.getMessage().contains("high demand") && !"gemini-1.5-flash".equals(model)) {
+                log.info("Primary model {} overloaded, retrying with gemini-1.5-flash", model);
+                return callGeminiWithModel(prompt, maxTokens, "gemini-1.5-flash");
+            }
+            throw e;
+        }
+    }
+
     private String callGemini(String prompt, int maxTokens) {
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+        try {
+            return callGeminiWithModel(prompt, maxTokens, model);
+        } catch (GeminiApiException e) {
+            log.warn("Gemini API call failed: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private String callGeminiWithModel(String prompt, int maxTokens, String modelToUse) {
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/" + modelToUse + ":generateContent?key=" + apiKey;
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))));
@@ -148,9 +170,32 @@ public class GeminiApiServiceImpl implements GeminiApiService {
                     }
                 }
             }
+            throw new GeminiApiException("AI did not return a valid response.");
+        } catch (HttpStatusCodeException e) {
+            String message = extractErrorMessage(e.getResponseBodyAsString());
+            if (message == null) {
+                message = e.getStatusCode() + ": " + e.getStatusText();
+            }
+            log.warn("Gemini API call failed: {}", message);
+            throw new GeminiApiException(message, e);
+        } catch (GeminiApiException e) {
+            throw e;
         } catch (Exception e) {
             log.warn("Gemini API call failed: {}", e.getMessage());
+            throw new GeminiApiException("Gemini API error: " + e.getMessage(), e);
         }
+    }
+
+    private String extractErrorMessage(String responseBody) {
+        if (responseBody == null || responseBody.isBlank()) return null;
+        try {
+            JsonNode root = OBJECT_MAPPER.readTree(responseBody);
+            JsonNode error = root.get("error");
+            if (error != null) {
+                JsonNode msg = error.get("message");
+                if (msg != null) return msg.asText();
+            }
+        } catch (Exception ignored) {}
         return null;
     }
 

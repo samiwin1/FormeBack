@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.formation_service.dto.GenerateFormationRequest;
 import tn.esprit.formation_service.entity.Formation;
+import tn.esprit.formation_service.exception.GeminiApiException;
 import tn.esprit.formation_service.service.FormationGeneratorService;
 
 @RestController
@@ -22,11 +23,12 @@ public class FormationGeneratorController {
         if (request.getTitle() == null || request.getTitle().isBlank()) {
             return ResponseEntity.badRequest().body(java.util.Map.of("message", "title is required"));
         }
-        Formation formation = formationGeneratorService.generateAndSave(request);
-        if (formation == null) {
+        try {
+            Formation formation = formationGeneratorService.generateAndSave(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(formation);
+        } catch (GeminiApiException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(java.util.Map.of("message", "AI generation failed. Check API key and try again."));
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(formation);
     }
 }
