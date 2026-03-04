@@ -3,24 +3,21 @@ server:
 
 spring:
   main:
-    web-application-type: reactive   # ← ADD THIS
+    web-application-type: reactive
   application:
     name: api-gateway
 
   cloud:
     gateway:
-      # Automatically create routes from Eureka – every service is reachable
-      # at /SERVICE-NAME/** without manual route entries.
       discovery:
         locator:
           enabled: true
-          lower-case-service-id: true   # use lowercase: /user-service/** instead of /USER-SERVICE/**
+          lower-case-service-id: true
 
-      # ── Manual routes (explicit is better for production) ──────────────────
       routes:
-        # ── User-Service ────────────────────────────────────────────────────
+        # ── User-Service ─────────────────────────────────────────────────────
         - id: user-service-auth
-          uri: lb://user-service        # resolved via Eureka + Ribbon/LB
+          uri: lb://user-service
           predicates:
             - Path=/api/auth/**
           filters:
@@ -46,8 +43,29 @@ spring:
             - Path=/api/superadmin/**
           filters:
             - StripPrefix=1
-      
-      # ── Global CORS ────────────────────────────────────────────────────────
+
+        # ── Business-Service ─────────────────────────────────────────────────
+        - id: partner-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/partners/**
+
+        - id: deal-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/deals/**
+
+        - id: pack-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/packs/**
+
+        - id: accesscode-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/access-codes/**
+
+      # ── Global CORS ──────────────────────────────────────────────────────
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
@@ -65,7 +83,8 @@ spring:
               - "*"
             allowCredentials: true
             maxAge: 3600
-# ── Eureka Client registration ─────────────────────────────────────────────
+
+# ── Eureka ───────────────────────────────────────────────────────────────────
 eureka:
   client:
     service-url:

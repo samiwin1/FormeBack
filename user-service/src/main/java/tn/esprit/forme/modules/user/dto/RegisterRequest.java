@@ -26,4 +26,8 @@ public class RegisterRequest {
     // partner flow
     private Long partnerId;
     private String partnerCode;
+
+    // ✅ reCAPTCHA token from frontend
+    @NotBlank(message = "CAPTCHA token is required")
+    private String captchaToken;
 }
