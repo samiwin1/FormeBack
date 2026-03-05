@@ -46,6 +46,28 @@ spring:
             - Path=/api/superadmin/**
           filters:
             - StripPrefix=1
+
+        # ── Shop-Service ─────────────────────────────────────────────────────
+        - id: shop-service-products
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/shop/**
+          filters:
+            - RewritePath=/api/shop/(?<segment>.*), /gestionshop/${segment}
+
+        - id: shop-service-formations
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/formations/**
+          filters:
+            - RewritePath=/api/formations/(?<segment>.*), /gestionshop/formation/${segment}
+
+        - id: shop-service-payments
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - RewritePath=/api/payments/(?<segment>.*), /gestionshop/payment/${segment}
       
       # ── Global CORS ────────────────────────────────────────────────────────
       globalcors:
