@@ -1,0 +1,81 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: mentor-service
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/forme_mentor?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false}
+    username: root
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET:ThisIsA32+CharSecretKeyChangeMeNow!!!}
+
+google:
+  ai:
+    api-key: AIzaSyDMGf2JwhikZN4-rC1Y65kNYj0bwmWD3c8
+    api-url: ${GOOGLE_AI_API_URL:https://generativelanguage.googleapis.com/v1beta}
+    model: gemini-2.5-flash
+
+mentor:
+  formation:
+    enabled: ${MENTOR_FORMATION_CLIENT_ENABLED:true}
+    internal-token: ${FORMATION_INTERNAL_TOKEN:}
+  certification:
+    enabled: ${MENTOR_CERTIFICATION_CLIENT_ENABLED:true}
+    internal-token: ${CERTIFICATION_INTERNAL_TOKEN:${FORMATION_INTERNAL_TOKEN:}}
+  ask-rate-min-interval-ms: 3000
+  reminder:
+    enabled: ${MENTOR_REMINDER_ENABLED:true}
+    cron: "${MENTOR_REMINDER_CRON:0 0 8 * * *}"
+    from: ${MAIL_USERNAME:noreply@forme.app}
+  user-service:
+    url: ${USER_SERVICE_URL:http://user-service}
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
