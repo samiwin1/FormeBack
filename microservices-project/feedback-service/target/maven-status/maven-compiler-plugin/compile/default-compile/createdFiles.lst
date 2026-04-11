@@ -1,0 +1,10 @@
+com\example\controller\FeedbackController.class
+com\example\entity\FeedbackResponse.class
+com\example\FeedbackServiceApplication.class
+com\example\service\FeedbackResponseService.class
+com\example\repository\FeedbackResponseRepository.class
+com\example\service\FeedbackService.class
+com\example\entity\Feedback.class
+com\example\service\AiService.class
+com\example\controller\FeedbackResponseController.class
+com\example\repository\FeedbackRepository.class

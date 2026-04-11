@@ -28,6 +28,11 @@ spring:
           predicates:
             - Path=/api/accesscodes/**
 
+        - id: feedback-route
+          uri: lb://feedback-service
+          predicates:
+            - Path=/api/feedbacks/**
+
 eureka:
   client:
     service-url:
