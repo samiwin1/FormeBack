@@ -15,6 +15,11 @@
         <module>eureka-server</module>
         <module>api-gateway</module>
         <module>user-service</module>
+        <module>gestion shop</module>
+        <module>FormeFormation/formation_service</module>
+        <module>formecertification/certification-service</module>
+        <module>document-service</module>
+        <module>article-service</module>
     </modules>
 
     <properties>

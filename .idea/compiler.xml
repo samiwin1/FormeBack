@@ -7,7 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
+        <module name="certification-service" />
         <module name="eureka-server" />
+        <module name="article-service" />
       </profile>
       <profile name="Annotation profile for ForME Microservices" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -16,8 +18,28 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
         </processorPath>
+        <module name="shop-service" />
+        <module name="document-service" />
         <module name="user-service" />
       </profile>
+      <profile name="Annotation profile for formation_service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="formation_service" />
+      </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="article-service" options="-parameters" />
+      <module name="certification-service" options="-parameters" />
+      <module name="document-service" options="-parameters" />
+      <module name="formation_service" options="-parameters" />
+      <module name="shop-service" options="-parameters" />
+    </option>
   </component>
 </project>

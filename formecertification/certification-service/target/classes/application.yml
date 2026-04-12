@@ -1,0 +1,70 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: certification-service
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/forme_certification1?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+      minimum-idle: 5
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+  flyway:
+    enabled: ${APP_FLYWAY_ENABLED:false}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:forme@forme.com}
+    password: ${MAIL_PASSWORD:qwcljqnkrsgqievv}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+app:
+  # Must match user-service app.jwt.secret so tokens issued at login are accepted here
+  jwt:
+    secret: ${JWT_SECRET:ThisIsA32+CharSecretKeyChangeMeNow!!!}
+  certificates:
+    output-dir: ${CERTIFICATES_OUTPUT_DIR:generated-certificates}
+  notification:
+    email-enabled: ${APP_EMAIL_ENABLED:true}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080,http://127.0.0.1:8080}
+
+google:
+  ai:
+    api-key: ${GOOGLE_AI_API_KEY:AIzaSyBvcsPWLQ1t3X4Gx_dUHZyOCVjy93dIYrk}
+    api-url: ${GOOGLE_AI_API_URL:https://generativelanguage.googleapis.com/v1beta}
+    model: ${GOOGLE_AI_MODEL:gemini-2.0-flash}
+    fallback-models: ${GOOGLE_AI_FALLBACK_MODELS:gemini-2.0-flash,gemini-1.5-flash,gemini-1.5-pro}

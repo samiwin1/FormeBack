@@ -33,6 +33,12 @@ spring:
           filters:
             - StripPrefix=1
 
+        # ── Certification-Service (before /api/admin/** for /api/admin/oral) ─
+        - id: certification-service-admin-oral
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/admin/oral/**
+
         - id: user-service-admin
           uri: lb://user-service
           predicates:
@@ -46,6 +52,118 @@ spring:
             - Path=/api/superadmin/**
           filters:
             - StripPrefix=1
+
+        # ── Shop-Service (gestion shop) – single gateway ──────────────────────
+        - id: shop-service-all
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/shop/**
+          filters:
+            - RewritePath=/api/shop/(?<segment>.*), /gestionshop/${segment}
+
+        - id: shop-service-payments
+          uri: lb://shop-service
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - RewritePath=/api/payments/(?<segment>.*), /gestionshop/payment/${segment}
+
+        # ── Formation-Service – single gateway ───────────────────────────────
+        - id: formation-service-formations
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/formations/**
+
+        - id: formation-service-examens
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/examens/**
+
+        - id: formation-service-evaluations
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/evaluations/**
+
+        - id: formation-service-result-examens
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/result-examens/**
+
+        - id: formation-service-result-evaluations
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/result-evaluations/**
+
+        - id: formation-service-contenus
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/contenus-formation/**
+
+        - id: formation-service-agent-thinking
+          uri: lb://formation-service
+          predicates:
+            - Path=/api/agent-thinking/**
+
+        - id: document-service-documents
+          uri: lb://document-service
+          predicates:
+            - Path=/api/documents/**
+
+        - id: article-service-articles
+          uri: lb://article-service
+          predicates:
+            - Path=/api/articles/**
+
+        # ── Certification-Service (formecertification) – single gateway ─────────
+        - id: certification-service-certifications
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/certifications/**
+
+        - id: certification-service-oral-sessions
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/oral-sessions/**
+
+        - id: certification-service-oral-assignments
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/oral-assignments/**
+
+        - id: certification-service-reschedule
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/reschedule/**
+
+        - id: certification-service-me
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/me/**
+
+        - id: certification-service-admin-reschedule
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/admin/reschedule/**
+
+        - id: certification-service-admin-issued
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/admin/issued-certifications/**
+
+        - id: certification-service-admin-feedback
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/admin/feedback/**
+
+        - id: certification-service-admin-user-directory
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/admin/user-directory/**
+
+        - id: certification-service-issued-pdf
+          uri: lb://certification-service
+          predicates:
+            - Path=/api/issued-certifications/**
       
       # ── Global CORS ────────────────────────────────────────────────────────
       globalcors:

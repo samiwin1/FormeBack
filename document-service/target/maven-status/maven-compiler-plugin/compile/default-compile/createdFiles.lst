@@ -1,0 +1,8 @@
+tn\esprit\document\documentservice\modules\document\repository\DocumentRepository.class
+tn\esprit\document\documentservice\modules\document\service\DocumentService.class
+tn\esprit\document\documentservice\modules\document\service\IDocumentService.class
+tn\esprit\document\documentservice\modules\document\entity\OwnerType.class
+tn\esprit\document\documentservice\DocumentServiceApplication.class
+tn\esprit\document\documentservice\modules\document\entity\Document.class
+tn\esprit\document\documentservice\modules\document\controller\DocumentController.class
+tn\esprit\document\documentservice\modules\document\entity\FileType.class
