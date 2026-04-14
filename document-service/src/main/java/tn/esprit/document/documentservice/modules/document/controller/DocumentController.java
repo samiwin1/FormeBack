@@ -78,8 +78,11 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDocument(@PathVariable Long id) {
-        documentService.deleteDocument(id);
+    public void deleteDocument(
+            @PathVariable Long id,
+            @RequestParam Long requesterId,
+            @RequestParam(defaultValue = "false") boolean isSuperAdmin) {
+        documentService.deleteDocument(id, requesterId, isSuperAdmin);
     }
 
     @GetMapping("/formation/{formationId}")

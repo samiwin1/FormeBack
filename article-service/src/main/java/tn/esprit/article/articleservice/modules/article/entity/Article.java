@@ -18,6 +18,8 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long ownerId;
+
     @Column(nullable = false, length = 255)
     private String titre;
 

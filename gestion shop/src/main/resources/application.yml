@@ -31,7 +31,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui
 
-
+# ── Stripe ──
+stripe:
+  secret-key: sk_test_51QxSSXChmhEZInbmR6aYUoeUBKCHZmrTbk9VLrJqIJ4Qxdx2CgMceDWuWwSFg8mw0lMlJzihLOvDfzwfJ3T8sh9s00jiKsyxze
 
 # ── Eureka Client ──
 eureka:

@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 @Slf4j
 @Service
 public class DocumentService implements IDocumentService {
@@ -85,7 +88,16 @@ public class DocumentService implements IDocumentService {
     }
 
     @Override
-    public void deleteDocument(Long id) {
+    public void deleteDocument(Long id, Long requesterId, boolean isSuperAdmin) {
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found"));
+
+        boolean ownerDelete = requesterId != null && requesterId.equals(document.getOwnerId());
+        if (!isSuperAdmin && !ownerDelete) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Only super admin or document owner can delete this document");
+        }
+
         documentRepository.deleteById(id);
     }
 

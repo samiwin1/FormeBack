@@ -8,7 +8,7 @@ public interface IDocumentService {
     Document uploadDocument(String title, Long formationId, Long ownerId, String ownerType, MultipartFile file);
     Document getDocument(Long id);
     Document updateDocument(Long id, String title, Long formationId, Long ownerId, String ownerType, MultipartFile file);
-    void deleteDocument(Long id);
+    void deleteDocument(Long id, Long requesterId, boolean isSuperAdmin);
     List<Document> getAllDocuments();
     List<Document> getDocumentsByFormationId(Long formationId);
 }
