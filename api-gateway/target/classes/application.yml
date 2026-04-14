@@ -53,6 +53,33 @@ spring:
           filters:
             - StripPrefix=1
 
+        # ── Business-Service (partners/deals/packs/access-codes) ───────────
+        - id: business-service-partners
+          uri: lb://business-service
+          predicates:
+            - Path=/api/partners/**
+
+        - id: business-service-deals
+          uri: lb://business-service
+          predicates:
+            - Path=/api/deals/**
+
+        - id: business-service-packs
+          uri: lb://business-service
+          predicates:
+            - Path=/api/packs/**
+
+        - id: business-service-access-codes
+          uri: lb://business-service
+          predicates:
+            - Path=/api/access-codes/**
+
+        # ── Partner-Performance-Service ─────────────────────────────────────
+        - id: partner-performance-service
+          uri: lb://partner-performance-service
+          predicates:
+            - Path=/api/partner-performance/**
+
         # ── Shop-Service (gestion shop) – single gateway ──────────────────────
         - id: shop-service-all
           uri: lb://shop-service

@@ -1,4 +1,4 @@
-package com.example;
+package tn.esprit.partnerperformance;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class BusinessServiceApplication {
+public class PartnerPerformanceApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(BusinessServiceApplication.class, args);
+        SpringApplication.run(PartnerPerformanceApplication.class, args);
     }
 }

@@ -1,11 +1,11 @@
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\entity\Article.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\entity\ArticleLike.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\entity\ArticleCategory.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\ArticleServiceApplication.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\service\ArticleService.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\repository\ArticleCommentRepository.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\service\IArticleService.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\controller\ArticleController.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\repository\ArticleRepository.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\repository\ArticleLikeRepository.java
-C:\Users\yassi\Desktop\pi module 2\pi4 li5Ir\FormeBack\article-service\src\main\java\tn\esprit\article\articleservice\modules\article\entity\ArticleComment.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/entity/Article.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/service/IArticleService.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/repository/ArticleRepository.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/repository/ArticleLikeRepository.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/service/ArticleService.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/ArticleServiceApplication.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/entity/ArticleComment.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/repository/ArticleCommentRepository.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/entity/ArticleLike.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/entity/ArticleCategory.java
+/Users/mac/noor/back/article-service/src/main/java/tn/esprit/article/articleservice/modules/article/controller/ArticleController.java

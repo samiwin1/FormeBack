@@ -20,6 +20,8 @@
         <module>formecertification/certification-service</module>
         <module>document-service</module>
         <module>article-service</module>
+        <module>microservices-project/business-service</module>
+        <module>partner-performance-service</module>
     </modules>
 
     <properties>

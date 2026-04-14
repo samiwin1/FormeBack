@@ -55,6 +55,8 @@ app:
   # Must match user-service app.jwt.secret so tokens issued at login are accepted here
   jwt:
     secret: ${JWT_SECRET:ThisIsA32+CharSecretKeyChangeMeNow!!!}
+  seed:
+    demo-data: true
   certificates:
     output-dir: ${CERTIFICATES_OUTPUT_DIR:generated-certificates}
   notification:

@@ -1,0 +1,8 @@
+# Graphify output
+/graphify-out/
+
+# Maven build output
+**/target/
+**/target/**.run_logs/
+*/target/
+target/
