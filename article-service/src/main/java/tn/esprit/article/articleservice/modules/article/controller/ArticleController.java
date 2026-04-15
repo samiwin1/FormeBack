@@ -38,8 +38,11 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteArticle(@PathVariable Long id) {
-        articleService.removeArticle(id);
+    public void deleteArticle(
+            @PathVariable Long id,
+            @RequestParam Long requesterId,
+            @RequestParam(defaultValue = "false") boolean isAdmin) {
+        articleService.removeArticle(id, requesterId, isAdmin);
     }
 
     @PostMapping("/{id}/like")
@@ -56,6 +59,25 @@ public class ArticleController {
     @PostMapping("/{id}/comments")
     public ArticleComment addComment(@PathVariable Long id, @RequestBody ArticleComment comment) {
         return articleService.addComment(id, comment);
+    }
+
+    @PutMapping("/{articleId}/comments/{commentId}")
+    public ArticleComment updateComment(
+            @PathVariable Long articleId,
+            @PathVariable Long commentId,
+            @RequestParam Long requesterId,
+            @RequestParam(defaultValue = "false") boolean isAdmin,
+            @RequestBody ArticleComment comment) {
+        return articleService.updateComment(articleId, commentId, comment, requesterId, isAdmin);
+    }
+
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public void deleteComment(
+            @PathVariable Long articleId,
+            @PathVariable Long commentId,
+            @RequestParam Long requesterId,
+            @RequestParam(defaultValue = "false") boolean isSuperAdmin) {
+        articleService.removeComment(articleId, commentId, requesterId, isSuperAdmin);
     }
 
     @PostMapping("/{id}/translate")

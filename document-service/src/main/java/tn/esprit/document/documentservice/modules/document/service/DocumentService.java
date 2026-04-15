@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.server.ResponseStatusException;
+
 @Slf4j
 @Service
 public class DocumentService implements IDocumentService {
@@ -38,7 +42,7 @@ public class DocumentService implements IDocumentService {
         document.setTitle(title);
         document.setFormationId(formationId);
         document.setOwnerId(ownerId);
-        document.setOwnerType(OwnerType.valueOf(ownerType));
+        document.setOwnerType(parseOwnerType(ownerType));
 
         if (file != null && !file.isEmpty()) {
             String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -53,7 +57,7 @@ public class DocumentService implements IDocumentService {
             }
         }
 
-        return documentRepository.save(document);
+        return saveDocumentWithSchemaFallback(document);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class DocumentService implements IDocumentService {
         if (title != null) document.setTitle(title);
         if (formationId != null) document.setFormationId(formationId);
         if (ownerId != null) document.setOwnerId(ownerId);
-        if (ownerType != null) document.setOwnerType(OwnerType.valueOf(ownerType));
+        if (ownerType != null) document.setOwnerType(parseOwnerType(ownerType));
 
         if (file != null && !file.isEmpty()) {
             String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -81,11 +85,20 @@ public class DocumentService implements IDocumentService {
                 throw new RuntimeException("Failed to store file.", e);
             }
         }
-        return documentRepository.save(document);
+        return saveDocumentWithSchemaFallback(document);
     }
 
     @Override
-    public void deleteDocument(Long id) {
+    public void deleteDocument(Long id, Long requesterId, boolean isSuperAdmin) {
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found"));
+
+        boolean ownerDelete = requesterId != null && requesterId.equals(document.getOwnerId());
+        if (!isSuperAdmin && !ownerDelete) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Only super admin or document owner can delete this document");
+        }
+
         documentRepository.deleteById(id);
     }
 
@@ -101,23 +114,44 @@ public class DocumentService implements IDocumentService {
 
     private FileType detectFileType(String originalFilename) {
         if (originalFilename == null) {
-            return FileType.OTHER;
+            return FileType.IMAGE;
         }
 
         String name = originalFilename.toLowerCase(Locale.ROOT);
         if (name.endsWith(".pdf")) return FileType.PDF;
         if (name.endsWith(".docx")) return FileType.DOCX;
         if (name.endsWith(".doc")) return FileType.DOC;
-        if (name.endsWith(".pptx")) return FileType.PPTX;
-        if (name.endsWith(".ppt")) return FileType.PPT;
-        if (name.endsWith(".xlsx")) return FileType.XLSX;
-        if (name.endsWith(".xls")) return FileType.XLS;
-        if (name.endsWith(".odt")) return FileType.ODT;
-        if (name.endsWith(".ods")) return FileType.ODS;
-        if (name.endsWith(".odp")) return FileType.ODP;
-        if (name.endsWith(".txt")) return FileType.TEXT;
-        if (name.matches(".*\\.(mp4|avi|mov|mkv|webm)$")) return FileType.VIDEO;
-        if (name.matches(".*\\.(png|jpg|jpeg|gif|webp|bmp|svg)$")) return FileType.IMAGE;
-        return FileType.OTHER;
+        return FileType.IMAGE;
+    }
+
+    private OwnerType parseOwnerType(String ownerType) {
+        if (ownerType == null || ownerType.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ownerType is required");
+        }
+        try {
+            return OwnerType.valueOf(ownerType.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ownerType: " + ownerType);
+        }
+    }
+
+    private Document saveDocumentWithSchemaFallback(Document document) {
+        try {
+            return documentRepository.save(document);
+        } catch (DataIntegrityViolationException ex) {
+            FileType original = document.getFileType();
+            if (original != FileType.IMAGE) {
+                log.warn("fileType {} rejected by current schema, retrying with IMAGE", original);
+                document.setFileType(FileType.IMAGE);
+                try {
+                    return documentRepository.save(document);
+                } catch (DataIntegrityViolationException retryEx) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "File type is not supported by the current database schema", retryEx);
+                }
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Could not save document due to schema constraints", ex);
+        }
     }
 }

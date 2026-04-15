@@ -121,9 +121,6 @@ public class OrderController {
             iorderItemservice.addOrderItem(oi);
         }
 
-        cart.setStatus("COMPLETED");
-        icartservice.updateCart(cart);
-
         return ResponseEntity.ok(savedOrder);
     }
 }

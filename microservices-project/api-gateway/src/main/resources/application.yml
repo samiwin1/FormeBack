@@ -1,0 +1,34 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: partner-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/partners/**
+
+        - id: deal-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/deals/**
+
+        - id: pack-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/packs/**
+
+        - id: accesscode-route
+          uri: lb://business-service
+          predicates:
+            - Path=/api/accesscodes/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
