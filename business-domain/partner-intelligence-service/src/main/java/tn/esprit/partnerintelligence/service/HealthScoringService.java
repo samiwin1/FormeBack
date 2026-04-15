@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.service;import org.springframework.stereotype.Service;@Service public class HealthScoringService{ public double score(Long partnerId,Long dealId){ return 65+((partnerId+dealId)%30);} public double confidence(){return 0.82;} public String factors(){ return "usageTrend, redemptionRate, anomalyPenalty"; }}

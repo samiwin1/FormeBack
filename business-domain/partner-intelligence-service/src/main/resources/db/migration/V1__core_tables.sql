@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS deal_health_score_snapshot (id BIGINT PRIMARY KEY AUTO_INCREMENT, partner_id BIGINT, deal_id BIGINT, health_score DOUBLE, confidence DOUBLE, factors VARCHAR(1000), created_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS recommendation_item (id BIGINT PRIMARY KEY AUTO_INCREMENT, partner_id BIGINT, action_title VARCHAR(255), rationale VARCHAR(1000), priority_rank INT, confidence DOUBLE, status VARCHAR(50), created_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS anomaly_alert (id BIGINT PRIMARY KEY AUTO_INCREMENT, partner_id BIGINT, anomaly_type VARCHAR(255), explanation VARCHAR(1000), severity_score DOUBLE, status VARCHAR(50), created_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS forecast_snapshot (id BIGINT PRIMARY KEY AUTO_INCREMENT, partner_id BIGINT, horizon VARCHAR(20), predicted_revenue DOUBLE, confidence DOUBLE, created_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS partner_insight_summary (id BIGINT PRIMARY KEY AUTO_INCREMENT, partner_id BIGINT, summary TEXT, language VARCHAR(10), created_at TIMESTAMP);

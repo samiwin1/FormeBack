@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.client;import org.springframework.stereotype.Component;import java.util.Map;@Component public class PartnerPerformanceClient{ public Map<String,Object> kpi(Long partnerId){ return Map.of("partnerId",partnerId,"redemptionRate",0.71); }}

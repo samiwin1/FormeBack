@@ -16,6 +16,7 @@ import java.util.Map;
 @RequestMapping("/api/test")
 @RequiredArgsConstructor
 @Slf4j
+
 public class TestController {
 
     private final GoogleAIClient googleAIClient;

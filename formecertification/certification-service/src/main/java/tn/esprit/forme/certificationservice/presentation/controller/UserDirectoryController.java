@@ -16,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+
 public class UserDirectoryController {
 
     private final UserDirectoryAggregationService userDirectoryService;

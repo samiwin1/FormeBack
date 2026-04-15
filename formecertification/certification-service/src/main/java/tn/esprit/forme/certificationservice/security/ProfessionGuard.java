@@ -8,6 +8,7 @@ import tn.esprit.forme.certificationservice.infrastructure.feign.UserClient;
 @Component("professionGuard")
 @RequestScope
 @RequiredArgsConstructor
+
 public class ProfessionGuard {
 
     private final UserClient userClient;

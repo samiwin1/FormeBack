@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.service;import org.springframework.stereotype.Service;@Service public class ForecastService{ public double forecast(Long partnerId,String h){ return "7d".equals(h)?450:"90d".equals(h)?4200:1500; }}

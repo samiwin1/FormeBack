@@ -5,6 +5,7 @@ import jakarta.persistence.Converter;
 import tn.esprit.forme.certificationservice.domain.enums.MeetingProvider;
 
 @Converter(autoApply = false)
+
 public class MeetingProviderConverter implements AttributeConverter<MeetingProvider, String> {
 
     @Override

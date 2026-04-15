@@ -18,6 +18,7 @@ import java.util.OptionalDouble;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+
 public class FeedbackController {
 
     private final FeedbackService feedbackService;

@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+
 public class CertificateEventsService {
 
     private final Map<Long, Set<SseEmitter>> emittersByLearner = new ConcurrentHashMap<>();

@@ -8,6 +8,7 @@ import tn.esprit.forme.certificationservice.domain.enums.OralSessionStatus;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "oral_sessions", indexes = {
         @Index(name = "idx_oral_sessions_scheduled_at", columnList = "scheduled_at")
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class OralSession {
 
     @Id

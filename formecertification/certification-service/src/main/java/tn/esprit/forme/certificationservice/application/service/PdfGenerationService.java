@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+
 public class PdfGenerationService {
 
     private final Path outputDirectory;

@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+
 public class IssuedCertificationController {
 
     private final IssuedCertificationQueryService service;

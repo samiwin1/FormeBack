@@ -16,6 +16,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+
 public class CertificationCatalogService {
 
     private final CertificationCatalogRepository repository;

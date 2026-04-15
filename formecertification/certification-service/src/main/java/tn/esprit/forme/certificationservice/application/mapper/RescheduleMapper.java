@@ -5,6 +5,7 @@ import tn.esprit.forme.certificationservice.application.dto.reschedule.Reschedul
 import tn.esprit.forme.certificationservice.domain.entity.RescheduleRequest;
 
 @Component
+
 public class RescheduleMapper {
 
     public RescheduleResponse toResponse(RescheduleRequest entity) {

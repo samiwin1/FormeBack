@@ -1,0 +1,2 @@
+package tn.esprit.partnerintelligence.repository;
+import org.springframework.data.jpa.repository.JpaRepository;import tn.esprit.partnerintelligence.entity.PromptTemplateVersion;import java.util.Optional;public interface PromptTemplateVersionRepository extends JpaRepository<PromptTemplateVersion,Long>{Optional<PromptTemplateVersion> findFirstByPromptKeyAndActiveTrueOrderByCreatedAtDesc(String promptKey);}

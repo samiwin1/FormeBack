@@ -80,6 +80,30 @@ spring:
           predicates:
             - Path=/api/partner-performance/**
 
+        # ── Partner-Contract-Service ────────────────────────────────────────
+        - id: partner-contract-service
+          uri: lb://partner-contract-service
+          predicates:
+            - Path=/api/partner-contracts/**
+
+        # ── Voucher-Fraud-Service ────────────────────────────────────────
+        - id: voucher-fraud-service
+          uri: lb://voucher-fraud-service
+          predicates:
+            - Path=/api/voucher-fraud/**
+
+        # ── Partner-Billing-Service ────────────────────────────────────────
+        - id: partner-billing-service
+          uri: lb://partner-billing-service
+          predicates:
+            - Path=/api/partner-billing/**
+
+        # ── Partner-Intelligence-Service ───────────────────────────────────
+        - id: partner-intelligence-service
+          uri: lb://partner-intelligence-service
+          predicates:
+            - Path=/api/partner-intelligence/**
+
         # ── Shop-Service (gestion shop) – single gateway ──────────────────────
         - id: shop-service-all
           uri: lb://shop-service

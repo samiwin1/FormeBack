@@ -1,0 +1,44 @@
+server:
+  port: 8093
+
+spring:
+  application:
+    name: partner-intelligence-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/forme?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+ai:
+  provider: gemini
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-1.5-pro}
+    timeout-ms: 7000
+  policy:
+    english-only: true
+  features:
+    health-score: true
+    recommendations: true
+    anomaly-detection: true
+    forecasting: true
+    summaries: true

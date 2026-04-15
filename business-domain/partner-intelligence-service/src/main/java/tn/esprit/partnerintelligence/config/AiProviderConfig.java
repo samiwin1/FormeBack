@@ -1,0 +1,2 @@
+package tn.esprit.partnerintelligence.config;
+import org.springframework.boot.context.properties.ConfigurationProperties;import org.springframework.context.annotation.Configuration;@Configuration @ConfigurationProperties(prefix="ai") public class AiProviderConfig { private String provider; public String getProvider(){return provider;} public void setProvider(String provider){this.provider=provider;} }
