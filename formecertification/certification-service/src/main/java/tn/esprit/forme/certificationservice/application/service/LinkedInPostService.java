@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+
 public class LinkedInPostService {
 
     private final GoogleAIClient googleAIClient;

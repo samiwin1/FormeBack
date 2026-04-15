@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.service;import org.springframework.stereotype.Service;@Service public class AnomalyDetectionService{ public boolean detect(Long partnerId){ return partnerId%5==0;} public String reason(){ return "sudden conversion drop with stable traffic baseline"; }}

@@ -8,6 +8,7 @@ import tn.esprit.forme.certificationservice.domain.entity.CertificationCatalog;
 import tn.esprit.forme.certificationservice.domain.enums.CertificationStatus;
 
 @Component
+
 public class CertificationMapper {
 
     public CertificationCatalog fromCreate(CreateCertificationRequest request) {

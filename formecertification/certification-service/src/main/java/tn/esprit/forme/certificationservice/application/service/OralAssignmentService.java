@@ -18,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class OralAssignmentService {
 
     private final OralExamAssignmentRepository repository;

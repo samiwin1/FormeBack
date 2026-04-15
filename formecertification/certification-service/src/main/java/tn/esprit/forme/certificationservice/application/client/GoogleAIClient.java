@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Component
 @Slf4j
+
 public class GoogleAIClient {
 
     @Value("${google.ai.api-key}")

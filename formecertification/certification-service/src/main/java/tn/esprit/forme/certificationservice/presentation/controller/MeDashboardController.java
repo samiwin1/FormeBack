@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/me")
 @RequiredArgsConstructor
+
 public class MeDashboardController {
 
     private final DashboardAggregationService service;

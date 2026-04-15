@@ -5,6 +5,7 @@ import tn.esprit.forme.certificationservice.application.dto.assignment.OralAssig
 import tn.esprit.forme.certificationservice.domain.entity.OralExamAssignment;
 
 @Component
+
 public class AssignmentMapper {
 
     public OralAssignmentResponse toResponse(OralExamAssignment entity) {

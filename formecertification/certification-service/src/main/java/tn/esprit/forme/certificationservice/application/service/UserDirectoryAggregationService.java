@@ -22,6 +22,7 @@ import java.util.TreeSet;
 
 @Service
 @RequiredArgsConstructor
+
 public class UserDirectoryAggregationService {
 
     private final OralExamAssignmentRepository assignmentRepository;

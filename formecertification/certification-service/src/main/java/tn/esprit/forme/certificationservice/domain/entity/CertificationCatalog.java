@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import tn.esprit.forme.certificationservice.domain.enums.CertificationStatus;
 
+
 @Entity
 @Table(name = "certification_catalog")
 @Getter
@@ -13,6 +14,7 @@ import tn.esprit.forme.certificationservice.domain.enums.CertificationStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class CertificationCatalog {
 
     @Id

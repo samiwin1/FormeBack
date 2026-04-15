@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/oral")
 @RequiredArgsConstructor
+
 public class AdminOralDashboardController {
 
     private final DashboardAggregationService service;

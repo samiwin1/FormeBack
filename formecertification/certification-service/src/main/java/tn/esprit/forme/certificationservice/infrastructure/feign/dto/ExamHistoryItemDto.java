@@ -5,6 +5,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
+
 public class ExamHistoryItemDto {
     private Long examenId;
     private String examTitle;

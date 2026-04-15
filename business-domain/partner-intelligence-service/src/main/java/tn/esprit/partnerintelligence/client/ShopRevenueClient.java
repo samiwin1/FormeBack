@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.client;import org.springframework.stereotype.Component;@Component public class ShopRevenueClient{ public double revenue(Long partnerId,int days){ return days*12.5; }}

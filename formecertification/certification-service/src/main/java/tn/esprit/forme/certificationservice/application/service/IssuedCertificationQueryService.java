@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class IssuedCertificationQueryService {
 
     private final IssuedCertificationRepository repository;

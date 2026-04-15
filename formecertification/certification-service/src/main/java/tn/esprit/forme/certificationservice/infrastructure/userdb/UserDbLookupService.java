@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+
 public class UserDbLookupService {
 
     @Value("${app.userdb.url:jdbc:mysql://localhost:3306/forme?useUnicode=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC}")

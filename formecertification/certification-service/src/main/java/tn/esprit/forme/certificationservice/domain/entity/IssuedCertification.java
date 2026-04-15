@@ -6,6 +6,7 @@ import tn.esprit.forme.certificationservice.domain.enums.IssuedCertificationStat
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "issued_certifications",
         uniqueConstraints = {
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class IssuedCertification {
 
     @Id

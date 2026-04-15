@@ -23,6 +23,7 @@ import java.util.OptionalDouble;
 
 @Service
 @RequiredArgsConstructor
+
 public class FeedbackService {
 
     private final SessionFeedbackRepository feedbackRepository;

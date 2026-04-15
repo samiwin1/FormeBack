@@ -1,0 +1,2 @@
+package tn.esprit.partnerintelligence.config;
+import org.springframework.boot.context.properties.ConfigurationProperties;import org.springframework.context.annotation.Configuration;@Configuration @ConfigurationProperties(prefix="ai.features") public class FeatureFlagConfig { private boolean healthScore=true; public boolean isHealthScore(){return healthScore;} public void setHealthScore(boolean v){healthScore=v;} }

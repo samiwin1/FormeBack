@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/oral-sessions")
 @RequiredArgsConstructor
+
 public class OralSessionController {
 
     private final OralSessionService service;

@@ -60,7 +60,6 @@
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/application/service/SmartReminderService.java
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/application/service/UserDirectoryAggregationService.java
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/config/CorsFilterConfig.java
-/Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/config/DemoDataSeeder.java
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/config/SecurityConfig.java
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/config/WebClientConfig.java
 /Users/mac/noor/back/formecertification/certification-service/src/main/java/tn/esprit/forme/certificationservice/config/WebCorsConfig.java

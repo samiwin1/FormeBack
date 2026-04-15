@@ -9,6 +9,7 @@ import tn.esprit.forme.certificationservice.domain.entity.OralSession;
 import tn.esprit.forme.certificationservice.domain.enums.OralSessionStatus;
 
 @Component
+
 public class OralSessionMapper {
 
     public OralSession fromCreate(CreateOralSessionRequest request, CertificationCatalog certification) {

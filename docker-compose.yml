@@ -118,6 +118,27 @@ services:
     networks:
       - forme-net
 
+  # ── Partner Intelligence Service ──────────────────────────────
+  partner-intelligence-service:
+    build: ./business-domain/partner-intelligence-service
+    container_name: partner-intelligence-service
+    restart: unless-stopped
+    ports:
+      - "8093:8093"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/forme?useUnicode=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - forme-net
+
 networks:
   forme-net:
     driver: bridge

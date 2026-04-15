@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final SecretKey secretKey;

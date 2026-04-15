@@ -1,0 +1,2 @@
+package tn.esprit.partnerintelligence;
+import org.junit.jupiter.api.Test;import tn.esprit.partnerintelligence.service.HealthScoringService;import static org.junit.jupiter.api.Assertions.*;class HealthScoringServiceTest{ @Test void scoreInRange(){ double s=new HealthScoringService().score(2L,1L); assertTrue(s>=0&&s<=100); } }

@@ -5,6 +5,7 @@ import tn.esprit.forme.certificationservice.application.dto.issued.IssuedCertifi
 import tn.esprit.forme.certificationservice.domain.entity.IssuedCertification;
 
 @Component
+
 public class IssuedCertificationMapper {
 
     public IssuedCertificationResponse toResponse(IssuedCertification entity) {

@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.client;import org.springframework.stereotype.Component;import java.util.Map;@Component public class BusinessMetadataClient{ public Map<String,Object> partner(Long partnerId){ return Map.of("partnerId",partnerId,"segment","gold"); }}

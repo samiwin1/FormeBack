@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor
+
 public class JwtPrincipal {
     private final Long userId;
     private final String subject;

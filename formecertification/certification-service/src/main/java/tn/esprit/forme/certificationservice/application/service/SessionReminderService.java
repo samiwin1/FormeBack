@@ -27,6 +27,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+
 public class SessionReminderService {
 
     private final OralSessionRepository oralSessionRepository;

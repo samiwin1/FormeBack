@@ -16,6 +16,7 @@ import tn.esprit.forme.certificationservice.security.SecurityUtils;
 @RestController
 @RequestMapping("/api/me")
 @RequiredArgsConstructor
+
 public class LinkedInPostController {
 
     private final LinkedInPostService linkedInPostService;

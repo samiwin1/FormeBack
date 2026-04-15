@@ -1,0 +1,1 @@
+package tn.esprit.partnerintelligence.service;import org.springframework.stereotype.Service;@Service public class PromptExperimentService{ public String assignVariant(Long partnerId){ return partnerId%2==0?"A":"B"; }}
