@@ -164,7 +164,13 @@ spring:
           uri: lb://certification-service
           predicates:
             - Path=/api/issued-certifications/**
-      
+
+        # ── Events-Service ───────────────────────────────────────────────────
+        - id: events-service-api
+          uri: lb://events-service
+          predicates:
+            - Path=/api/events/**
+
       # ── Global CORS ────────────────────────────────────────────────────────
       globalcors:
         add-to-simple-url-handler-mapping: true
