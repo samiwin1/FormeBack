@@ -15,7 +15,7 @@ pipeline {
                 echo 'Stage: Git Checkout'
                 echo '════════════════════════════════════════════'
                 checkout([$class: 'GitSCM',
-                    branches: [[name: '*/jenkins-work']],
+                    branches: [[name: '*/devops']],
                     userRemoteConfigs: [[url: 'https://github.com/samiwin1/FormeBack.git']]
                 ])
                 echo 'Git checkout completed successfully'

@@ -4,7 +4,7 @@ pipeline {
     environment {
         SERVICE_NAME = 'document-service'
         CONTAINER_PORT = '8085'
-        HEALTH_ENDPOINT = 'http://localhost:8085/actuator/health'
+        HEALTH_ENDPOINT = 'http://document-service:8085/actuator/health'
         DOCKERHUB_CREDENTIALS = credentials('DOCKERHUB_CREDENTIALS')
     }
 
@@ -29,7 +29,7 @@ pipeline {
                         --name ${SERVICE_NAME} \
                         --network forme-net \
                         -p ${CONTAINER_PORT}:${CONTAINER_PORT} \
-                        -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/forme?useUnicode=true&createDatabaseIfNotExist=true \
+                        -e 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/forme?useUnicode=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC' \
                         -e SPRING_DATASOURCE_USERNAME=root \
                         -e SPRING_DATASOURCE_PASSWORD=root \
                         -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/ \
@@ -50,7 +50,7 @@ pipeline {
                     # Wait for service to be ready
                     for i in $(seq 1 30); do
                         echo "Health check attempt $i/30..."
-                        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" ${HEALTH_ENDPOINT} || echo "000")
+                        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "${HEALTH_ENDPOINT}" || echo "000")
                         
                         if [ "$RESPONSE" = "200" ]; then
                             echo "✅ Service is UP and healthy (HTTP 200)"
