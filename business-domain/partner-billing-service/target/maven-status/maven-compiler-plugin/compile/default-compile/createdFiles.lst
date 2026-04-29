@@ -1,0 +1,5 @@
+tn\esprit\partnerbilling\entities\PartnerInvoice.class
+tn\esprit\partnerbilling\services\PartnerInvoiceService.class
+tn\esprit\partnerbilling\controllers\PartnerInvoiceController.class
+tn\esprit\partnerbilling\PartnerBillingApplication.class
+tn\esprit\partnerbilling\repositories\PartnerInvoiceRepository.class

@@ -1,0 +1,7 @@
+tn\esprit\partnerperformance\dto\LeaderboardRow.class
+tn\esprit\partnerperformance\controllers\PartnerPerformanceController.class
+tn\esprit\partnerperformance\services\PartnerPerformanceService.class
+tn\esprit\partnerperformance\repositories\PerformanceAlertRepository.class
+tn\esprit\partnerperformance\PartnerPerformanceApplication.class
+tn\esprit\partnerperformance\dto\PartnerKpi.class
+tn\esprit\partnerperformance\entities\PerformanceAlert.class

@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+
+    environment {
+        SERVICE_NAME = 'document-service'
+        CONTAINER_PORT = '8085'
+        HEALTH_ENDPOINT = 'http://localhost:8085/actuator/health'
+        DOCKERHUB_CREDENTIALS = credentials('DOCKERHUB_CREDENTIALS')
+    }
+
+    stages {
+        stage('Deploy') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Deploy'
+                echo '════════════════════════════════════════════'
+                sh '''
+                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    
+                    # Stop and remove existing container if running
+                    docker stop ${SERVICE_NAME} 2>/dev/null || true
+                    docker rm ${SERVICE_NAME} 2>/dev/null || true
+                    
+                    # Pull latest image from DockerHub
+                    docker pull ${DOCKERHUB_CREDENTIALS_USR}/${SERVICE_NAME}:latest
+                    
+                    # Run new container
+                    docker run -d \
+                        --name ${SERVICE_NAME} \
+                        --network forme-net \
+                        -p ${CONTAINER_PORT}:${CONTAINER_PORT} \
+                        -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/forme?useUnicode=true&createDatabaseIfNotExist=true \
+                        -e SPRING_DATASOURCE_USERNAME=root \
+                        -e SPRING_DATASOURCE_PASSWORD=root \
+                        -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/ \
+                        ${DOCKERHUB_CREDENTIALS_USR}/${SERVICE_NAME}:latest
+                    
+                    docker logout
+                '''
+                echo 'Deployment completed'
+            }
+        }
+
+        stage('Monitoring Check') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Monitoring Check'
+                echo '════════════════════════════════════════════'
+                sh '''
+                    # Wait for service to be ready
+                    for i in $(seq 1 30); do
+                        echo "Health check attempt $i/30..."
+                        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" ${HEALTH_ENDPOINT} || echo "000")
+                        
+                        if [ "$RESPONSE" = "200" ]; then
+                            echo "✅ Service is UP and healthy (HTTP 200)"
+                            exit 0
+                        fi
+                        
+                        echo "Service not ready yet (HTTP $RESPONSE), waiting 10 seconds..."
+                        sleep 10
+                    done
+                    
+                    echo "❌ Service failed to start after 5 minutes"
+                    exit 1
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment successful! Service is running and healthy.'
+        }
+        failure {
+            echo '❌ Deployment failed. Check the logs above.'
+        }
+    }
+}

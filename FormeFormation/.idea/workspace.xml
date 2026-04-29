@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0a6d1908-2d9d-42d6-9a40-7cb824c14de7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../api-gateway/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api-gateway/target/classes/tn/esprit/gateway/ApiGatewayApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/target/classes/tn/esprit/gateway/ApiGatewayApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/ArticleServiceApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/ArticleServiceApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/controller/ArticleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/controller/ArticleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/Article$ArticleBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/Article$ArticleBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/Article.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/Article.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleCategory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleComment$ArticleCommentBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleComment$ArticleCommentBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleComment.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleComment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleLike$ArticleLikeBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleLike$ArticleLikeBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleLike.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/entity/ArticleLike.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleCommentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleCommentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleLikeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleLikeRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/repository/ArticleRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/service/ArticleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/service/ArticleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/service/IArticleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../article-service/target/classes/tn/esprit/article/articleservice/modules/article/service/IArticleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/DocumentServiceApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/DocumentServiceApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/controller/DocumentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/controller/DocumentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/Document.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/Document.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/FileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/FileType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/OwnerType.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/entity/OwnerType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/repository/DocumentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/repository/DocumentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/service/DocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/service/DocumentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/service/IDocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../document-service/target/classes/tn/esprit/document/documentservice/modules/document/service/IDocumentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../eureka-server/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../eureka-server/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../eureka-server/target/classes/tn/esprit/eurekaserver/EurekaServerApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../eureka-server/target/classes/tn/esprit/eurekaserver/EurekaServerApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../formecertification/certification-service/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../formecertification/certification-service/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/ForMeApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/ForMeApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/ApiException.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/ApiException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/ApiResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/ApiResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/common/GlobalExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/AppBootstrapSuperAdmin.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/AppBootstrapSuperAdmin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/AppInitConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/AppInitConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/CorsConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/CorsConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/SecurityBeansConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/SecurityBeansConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/controller/AnnouncementController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/controller/AnnouncementController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/controller/NotificationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/controller/NotificationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$CreateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$CreateRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$UpdateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto$UpdateRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/AnnouncementDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto$CreateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto$CreateRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto$Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto$Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/dto/NotificationDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Announcement$AnnouncementBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Announcement$AnnouncementBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Announcement.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Announcement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/AnnouncementStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/AnnouncementStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Notification$NotificationBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Notification$NotificationBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Notification.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/Notification.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/NotificationType.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/entity/NotificationType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/repository/AnnouncementRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/repository/AnnouncementRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/repository/NotificationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/repository/NotificationRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/service/AnnouncementService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/service/AnnouncementService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/service/NotificationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/dashboard/service/NotificationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/partner/service/MockPartnerClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/partner/service/MockPartnerClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/AdminService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/AdminService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/AdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/SuperAdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/SuperAdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/contoller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/AuthResponse$AuthResponseBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/AuthResponse$AuthResponseBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/AuthResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/AuthResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/CreateAdminRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/CreateAdminRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/CreateSuperAdminRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/CreateSuperAdminRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/LoginRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UpdateMeRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UpdateMeRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UpdateSuperAdminRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UpdateSuperAdminRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UserMeResponse$UserMeResponseBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UserMeResponse$UserMeResponseBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UserMeResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/dto/UserMeResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Profession.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Profession.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Role$RoleBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Role$RoleBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/User$UserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/User$UserBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/repository/RoleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/repository/RoleRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/AuthService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/SuperAdminService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/SuperAdminService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/modules/user/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/CustomUserDetailsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/JwtAuthFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/JwtAuthFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/JwtService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/tn/esprit/forme/security/JwtService.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="3CPzjiZdXCv5RudkgxZKb5FeY9w" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feat/merge-all-backend-business-features",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0a6d1908-2d9d-42d6-9a40-7cb824c14de7" name="Changes" comment="" />
+      <created>1776302131271</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776302131271</updated>
+      <workItem from="1776302132460" duration="5000" />
+      <workItem from="1776302161371" duration="3000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

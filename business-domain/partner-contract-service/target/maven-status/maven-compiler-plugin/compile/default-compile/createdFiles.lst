@@ -1,0 +1,5 @@
+tn\esprit\partnercontract\controllers\PartnerContractController.class
+tn\esprit\partnercontract\repositories\PartnerContractRepository.class
+tn\esprit\partnercontract\services\PartnerContractService.class
+tn\esprit\partnercontract\entities\PartnerContract.class
+tn\esprit\partnercontract\PartnerContractApplication.class

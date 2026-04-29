@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS inference_audit_log (id BIGINT PRIMARY KEY AUTO_INCREMENT, request_type VARCHAR(120), partner_id BIGINT, model_name VARCHAR(120), prompt_version VARCHAR(100), latency_ms INT, outcome_status VARCHAR(100), trace_id VARCHAR(255), input_digest TEXT, output_digest TEXT, created_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS recommendation_decision (id BIGINT PRIMARY KEY AUTO_INCREMENT, recommendation_id BIGINT, decision VARCHAR(50), reviewer VARCHAR(120), comment VARCHAR(1000), decided_at TIMESTAMP);

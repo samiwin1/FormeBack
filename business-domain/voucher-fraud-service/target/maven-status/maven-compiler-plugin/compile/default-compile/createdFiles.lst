@@ -1,0 +1,5 @@
+tn\esprit\voucherfraud\entities\FraudAlert.class
+tn\esprit\voucherfraud\repositories\FraudAlertRepository.class
+tn\esprit\voucherfraud\VoucherFraudApplication.class
+tn\esprit\voucherfraud\controllers\FraudAlertController.class
+tn\esprit\voucherfraud\services\FraudDetectionService.class

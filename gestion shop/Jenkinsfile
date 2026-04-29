@@ -1,0 +1,96 @@
+pipeline {
+    agent any
+
+    environment {
+        SERVICE_NAME = 'shop-service'
+        SONAR_HOST_URL = 'http://sonarqube:9000'
+        SONAR_LOGIN = credentials('SONAR_TOKEN')
+        DOCKERHUB_CREDENTIALS = credentials('DOCKERHUB_CREDENTIALS')
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Git Checkout'
+                echo '════════════════════════════════════════════'
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/jenkins-work']],
+                    userRemoteConfigs: [[url: 'https://github.com/samiwin1/FormeBack.git']]
+                ])
+                echo 'Git checkout completed successfully'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Unit Tests'
+                echo '════════════════════════════════════════════'
+                dir('gestion shop') {
+                    sh 'mvn test'
+                }
+                echo 'Unit tests completed'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: SonarQube Analysis'
+                echo '════════════════════════════════════════════'
+                dir('gestion shop') {
+                    sh '''
+                        mvn sonar:sonar \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_LOGIN} \
+                            -Dsonar.projectKey=${SERVICE_NAME} \
+                            -Dsonar.projectName=${SERVICE_NAME}
+                    '''
+                }
+                echo 'SonarQube analysis completed'
+            }
+        }
+
+        stage('Build JAR') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Build JAR'
+                echo '════════════════════════════════════════════'
+                dir('gestion shop') {
+                    sh 'mvn package -DskipTests'
+                }
+                echo 'JAR build completed'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                echo '════════════════════════════════════════════'
+                echo 'Stage: Docker Build & Push'
+                echo '════════════════════════════════════════════'
+                dir('gestion shop') {
+                    sh '''
+                        echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                        docker build -t ${DOCKERHUB_CREDENTIALS_USR}/${SERVICE_NAME}:latest .
+                        docker push ${DOCKERHUB_CREDENTIALS_USR}/${SERVICE_NAME}:latest
+                        docker logout
+                    '''
+                }
+                echo 'Docker image pushed to DockerHub'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo '✅ Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed. Check the logs above.'
+        }
+    }
+}
