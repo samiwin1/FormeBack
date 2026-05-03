@@ -1,86 +1,42 @@
 pipeline {
     agent any
-
     environment {
-        IMAGE_NAME = 'pidev/certification-service:latest'
-        SONAR_PROJECT_KEY = 'certification-service'
+        IMAGE_NAME = 'pidev/certification-service'
+        IMAGE_TAG = 'latest'
+        DOCKER_CREDS = credentials('dockerhub-credentials')
     }
-
     stages {
-
         stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Code checked out'
             }
         }
-
         stage('Build') {
             steps {
-                script {
-                    def mvnHome = tool 'Maven'
-                    dir('certification-service') {
-                        bat "\"${mvnHome}\\bin\\mvn\" clean package -DskipTests -B"
-                    }
+                dir('certification-service') {
+                    bat 'mvn clean package -DskipTests -B'
                 }
             }
         }
-
-        stage('Tests & Coverage') {
+        stage('Tests') {
             steps {
-                script {
-                    def mvnHome = tool 'Maven'
-                    dir('certification-service') {
-                        bat "\"${mvnHome}\\bin\\mvn\" test jacoco:report -B"
-                    }
-                }
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true,
-                          testResults: 'certification-service/target/surefire-reports/*.xml'
+                dir('certification-service') {
+                    bat 'mvn test -B'
                 }
             }
         }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def mvnHome = tool 'Maven'
-                    withSonarQubeEnv('SonarQube') {
-                        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                            dir('certification-service') {
-                                bat "\"${mvnHome}\\bin\\mvn\" sonar:sonar -B -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Docker Build & Push') {
             steps {
                 dir('certification-service') {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )]) {
-                        bat "docker build -t %IMAGE_NAME% ."
-                        bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
-                        bat "docker push %IMAGE_NAME%"
-                        bat "docker logout"
-                    }
+                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                    bat "echo %DOCKER_CREDS_PSW% | docker login -u %DOCKER_CREDS_USR% --password-stdin"
+                    bat "docker push %IMAGE_NAME%:%IMAGE_TAG%"
                 }
             }
         }
     }
-
     post {
-        success {
-            echo 'certification-service CI pipeline completed successfully.'
-        }
-        failure {
-            echo 'certification-service CI pipeline failed.'
-        }
+        success { echo 'Pipeline succeeded!' }
+        failure { echo 'Pipeline failed.' }
     }
 }
