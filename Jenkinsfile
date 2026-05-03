@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = 'pidev/mentor-service:latest'
         SONAR_PROJECT_KEY = 'mentor-service'
-        MVN_HOME = tool('Maven')
     }
 
     stages {
@@ -17,13 +16,19 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat "\"${MVN_HOME}\\bin\\mvn\" clean package -DskipTests -B"
+                script {
+                    def mvnHome = tool 'Maven'
+                    bat "\"${mvnHome}\\bin\\mvn\" clean package -DskipTests -B"
+                }
             }
         }
 
         stage('Tests & Coverage') {
             steps {
-                bat "\"${MVN_HOME}\\bin\\mvn\" test jacoco:report -B"
+                script {
+                    def mvnHome = tool 'Maven'
+                    bat "\"${mvnHome}\\bin\\mvn\" test jacoco:report -B"
+                }
             }
             post {
                 always {
@@ -35,9 +40,12 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                        bat "\"${MVN_HOME}\\bin\\mvn\" sonar:sonar -B -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%"
+                script {
+                    def mvnHome = tool 'Maven'
+                    withSonarQubeEnv('SonarQube') {
+                        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                            bat "\"${mvnHome}\\bin\\mvn\" sonar:sonar -B -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%"
+                        }
                     }
                 }
             }
