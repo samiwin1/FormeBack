@@ -41,7 +41,7 @@ app:
 
 google:
   ai:
-    api-key: AIzaSyDMGf2JwhikZN4-rC1Y65kNYj0bwmWD3c8
+    api-key: ${GOOGLE_AI_API_KEY:}
     api-url: ${GOOGLE_AI_API_URL:https://generativelanguage.googleapis.com/v1beta}
     model: gemini-2.5-flash
 
@@ -75,7 +75,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        # Added 'prometheus' so Prometheus can scrape /actuator/prometheus.
+        include: health, info, prometheus
   endpoint:
     health:
       show-details: always

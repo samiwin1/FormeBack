@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        NAMESPACE = 'pidev'
+    }
+
+    stages {
+
+        stage('Pull Latest Images') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                        echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                        docker pull pidev/certification-service:latest
+                        docker pull pidev/mentor-service:latest
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=${KUBECONFIG}
+                        kubectl apply -f k8s/namespace.yaml
+                        kubectl apply -f k8s/secrets/
+                        kubectl apply -f k8s/deployments/
+                        kubectl apply -f k8s/services/
+                        kubectl apply -f k8s/monitoring/
+                    """
+                }
+            }
+        }
+
+        stage('Rollout Status') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=${KUBECONFIG}
+                        kubectl rollout status deployment/certification-service -n ${NAMESPACE} --timeout=120s
+                        kubectl rollout status deployment/mentor-service -n ${NAMESPACE} --timeout=120s
+                    """
+                }
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=${KUBECONFIG}
+                        kubectl get pods -n ${NAMESPACE}
+                        kubectl get svc -n ${NAMESPACE}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment to Kubernetes completed successfully.'
+        }
+        failure {
+            echo 'Deployment failed. Check logs above.'
+        }
+    }
+}

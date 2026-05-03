@@ -4,15 +4,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Standalone parent — Spring Boot 3.3.4 -->
     <parent>
-        <groupId>tn.esprit</groupId>
-        <artifactId>forme-microservices</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
     </parent>
 
+    <groupId>tn.esprit</groupId>
     <artifactId>mentor-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <name>mentor-service</name>
     <description>ForME AI Mentor – learner portfolio and Gemini mentor</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <!-- SonarQube -->
+        <sonar.projectKey>mentor-service</sonar.projectKey>
+        <sonar.projectName>mentor-service</sonar.projectName>
+        <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+        <sonar.token>${env.SONAR_TOKEN}</sonar.token>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    </properties>
+
+    <!-- Spring Cloud BOM — provides versions for Eureka, LoadBalancer, etc. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -51,6 +79,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- Prometheus metrics exporter for Spring Actuator -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -125,6 +158,32 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <!-- SonarQube analysis plugin -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.3922</version>
+            </plugin>
+            <!-- JaCoCo for test coverage reports sent to SonarQube -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,193 @@
+# ─── Mentor + Certification Stack ─────────────────────────────────────────────
+# Run everything:  docker-compose up --build
+# Stop & clean:    docker-compose down -v
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── MySQL — shared DB for mentor + certification ───────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: mentor-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-mentor_secret}
+      MYSQL_DATABASE: forme_mentor
+    ports:
+      - "3307:3306"   # 3306 reserved for local MySQL; use 3307 on host
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-mentor_secret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - pi2-network
+
+  # ── Mentor Service (Spring Boot — port 8088) ───────────────────────────────
+  mentor-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mentor-container
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8091:8088"   # use 8091 on host since 8088 is taken by local Spring Boot
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/forme_mentor?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      DB_PASSWORD: ${DB_PASSWORD:-mentor_secret}
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-ThisIsA32+CharSecretKeyChangeMeNow!!!}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      GOOGLE_AI_API_KEY: ${GOOGLE_AI_API_KEY:-}
+      FORMATION_INTERNAL_TOKEN: ${FORMATION_INTERNAL_TOKEN:-}
+      CERTIFICATION_INTERNAL_TOKEN: ${CERTIFICATION_INTERNAL_TOKEN:-}
+      # Disable Eureka — no discovery server in this standalone stack.
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      USER_SERVICE_URL: ${USER_SERVICE_URL:-http://user-service}
+    networks:
+      - pi2-network
+
+  # ── Certification Service (Spring Boot — port 8090) ───────────────────────
+  # MySQL is on the Windows host (not in Docker), so we use host.docker.internal.
+  # The docker profile (application-docker.yml) is activated by the Dockerfile
+  # ENTRYPOINT, but SPRING_PROFILES_ACTIVE here makes it explicit and overridable.
+  certification-service:
+    build:
+      context: formecertification/certification-service
+      dockerfile: Dockerfile
+    container_name: certification-container
+    # on-failure restarts the container if it crashes (e.g. DB not ready yet).
+    restart: on-failure
+    ports:
+      - "8090:8090"
+    environment:
+      # Activate the docker Spring profile → uses application-docker.yml
+      SPRING_PROFILES_ACTIVE: docker
+      # DB_HOST tells application.yml which host to connect to.
+      # host.docker.internal resolves to your Windows machine from inside Docker.
+      DB_HOST: host.docker.internal
+      DB_NAME: ${DB_NAME:-forme_certification1}
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      # JWT / security
+      JWT_SECRET: ${JWT_SECRET:-ThisIsA32+CharSecretKeyChangeMeNow!!!}
+      # Mail
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      # Google AI
+      GOOGLE_AI_API_KEY: ${GOOGLE_AI_API_KEY:-}
+      # Disable Eureka — no discovery server in this standalone stack.
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+    # Extra host entry so host.docker.internal is always available
+    # (Docker Desktop on Windows adds it automatically, but this is explicit).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - pi2-network
+
+  # ── Angular Frontend (Nginx — port 80) ────────────────────────────────────
+  frontend:
+    build:
+      context: ../../FormeFront
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - mentor-service
+      - certification-service
+    networks:
+      - pi2-network
+
+  # ── SonarQube (code quality UI — port 9000) ───────────────────────────────
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    restart: unless-stopped
+    depends_on:
+      sonar-db:
+        condition: service_healthy
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonarqube
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD:-sonar_secret}
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_logs:/opt/sonarqube/logs
+      - sonar_extensions:/opt/sonarqube/extensions
+    networks:
+      - pi2-network
+
+  # ── PostgreSQL for SonarQube ───────────────────────────────────────────────
+  sonar-db:
+    image: postgres:15
+    container_name: sonar-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sonarqube
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD:-sonar_secret}
+    volumes:
+      - sonar_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar -d sonarqube"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - pi2-network
+
+  # ── Prometheus ─────────────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mentor-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - mentor-service
+    networks:
+      - pi2-network
+
+  # ── Grafana ────────────────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mentor-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - pi2-network
+
+volumes:
+  mysql_data:
+  sonar_data:
+  sonar_logs:
+  sonar_extensions:
+  sonar_postgres_data:
+  grafana_data:
+
+networks:
+  pi2-network:
+    driver: bridge

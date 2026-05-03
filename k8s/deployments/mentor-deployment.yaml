@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-service
+  namespace: pidev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mentor-service
+  template:
+    metadata:
+      labels:
+        app: mentor-service
+    spec:
+      containers:
+        - name: mentor-service
+          image: pidev/mentor-service:latest
+          ports:
+            - containerPort: 8088
+          env:
+            - name: DB_URL
+              value: jdbc:mysql://mysql-mentor-service:3306/forme_mentor?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: DB_PASSWORD
+            - name: APP_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: JWT_SECRET
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "false"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "false"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            failureThreshold: 3
