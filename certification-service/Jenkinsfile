@@ -16,22 +16,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('formecertification/certification-service') {
-                    sh 'mvn clean package -DskipTests -B'
+                dir('certification-service') {
+                    bat 'mvn clean package -DskipTests -B'
                 }
             }
         }
 
         stage('Tests & Coverage') {
             steps {
-                dir('formecertification/certification-service') {
-                    sh 'mvn test jacoco:report -B'
+                dir('certification-service') {
+                    bat 'mvn test jacoco:report -B'
                 }
             }
             post {
                 always {
                     junit allowEmptyResults: true,
-                          testResults: 'formecertification/certification-service/target/surefire-reports/*.xml'
+                          testResults: 'certification-service/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -40,12 +40,8 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                        dir('formecertification/certification-service') {
-                            sh """
-                                mvn sonar:sonar -B \
-                                  -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                                  -Dsonar.login=${SONAR_TOKEN}
-                            """
+                        dir('certification-service') {
+                            bat "mvn sonar:sonar -B -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%"
                         }
                     }
                 }
@@ -54,18 +50,16 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                dir('formecertification/certification-service') {
+                dir('certification-service') {
                     withCredentials([usernamePassword(
                         credentialsId: 'dockerhub-credentials',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
-                        sh """
-                            docker build -t ${IMAGE_NAME} .
-                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-                            docker push ${IMAGE_NAME}
-                            docker logout
-                        """
+                        bat "docker build -t %IMAGE_NAME% ."
+                        bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+                        bat "docker push %IMAGE_NAME%"
+                        bat "docker logout"
                     }
                 }
             }
