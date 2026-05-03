@@ -16,13 +16,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package -DskipTests -B'
+                bat 'mvn clean package -DskipTests -B'
             }
         }
 
         stage('Tests & Coverage') {
             steps {
-                sh 'mvn test jacoco:report -B'
+                bat 'mvn test jacoco:report -B'
             }
             post {
                 always {
@@ -36,11 +36,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                        sh """
-                            mvn sonar:sonar -B \
-                              -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                              -Dsonar.login=${SONAR_TOKEN}
-                        """
+                        bat "mvn sonar:sonar -B -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%"
                     }
                 }
             }
@@ -53,12 +49,10 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
-                        docker build -t ${IMAGE_NAME} .
-                        echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-                        docker push ${IMAGE_NAME}
-                        docker logout
-                    """
+                    bat "docker build -t %IMAGE_NAME% ."
+                    bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+                    bat "docker push %IMAGE_NAME%"
+                    bat "docker logout"
                 }
             }
         }
