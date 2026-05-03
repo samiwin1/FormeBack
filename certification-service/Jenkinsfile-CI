@@ -1,0 +1,76 @@
+﻿// CI Pipeline — certification-service
+// Stages: Checkout → Test+Coverage → SonarQube → Quality Gate → Docker Build
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "YOUR_DOCKERHUB_USERNAME/certification:latest"
+    }
+
+    tools {
+        maven 'Maven'    // must match the Maven installation name in Jenkins Global Tools
+        jdk   'JDK17'    // must match the JDK installation name in Jenkins Global Tools
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        // Run unit tests AND generate JaCoCo XML coverage report in one pass.
+        stage('Unit Tests + JaCoCo Coverage') {
+            steps {
+                dir('formecertification/certification-service') {
+                    sh 'mvn verify jacoco:report -B'
+                }
+            }
+            post {
+                always {
+                    // Publish JUnit test results.
+                    junit 'formecertification/certification-service/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // 'SonarQube' must match the server name in Jenkins > Configure System.
+                withSonarQubeEnv('SonarQube') {
+                    dir('formecertification/certification-service') {
+                        sh """
+                            mvn sonar:sonar -B \\
+                              -Dsonar.projectKey=certification \\
+                              -Dsonar.projectName=certification \\
+                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                // Abort the pipeline if the SonarQube quality gate fails.
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('formecertification/certification-service') {
+                    sh "docker build -t ${IMAGE_NAME} ."
+                }
+            }
+        }
+    }
+
+    post {
+        failure { echo 'CI pipeline failed.' }
+        success { echo 'CI pipeline passed — image built and ready for CD.' }
+    }
+}

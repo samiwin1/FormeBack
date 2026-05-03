@@ -1,0 +1,6 @@
+target/
+.idea/
+generated-certificates/
+*.class
+*.jar
+*.war

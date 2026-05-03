@@ -37,7 +37,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: ${MAIL_USERNAME:forme@forme.com}
-    password: ${MAIL_PASSWORD:qwcljqnkrsgqievv}
+    password: ${MAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -53,7 +53,7 @@ eureka:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:ThisIsA32+CharSecretKeyChangeMeNow!!!}
+    secret: ${JWT_SECRET}
   certificates:
     output-dir: ${CERTIFICATES_OUTPUT_DIR:generated-certificates}
   notification:
@@ -63,7 +63,7 @@ app:
 
 google:
   ai:
-    api-key: ${GOOGLE_AI_API_KEY:AIzaSyBvcsPWLQ1t3X4Gx_dUHZyOCVjy93dIYrk}
+    api-key: ${GOOGLE_AI_API_KEY}
     api-url: ${GOOGLE_AI_API_URL:https://generativelanguage.googleapis.com/v1beta}
     model: ${GOOGLE_AI_MODEL:gemini-2.0-flash}
     fallback-models: ${GOOGLE_AI_FALLBACK_MODELS:gemini-2.0-flash,gemini-1.5-flash,gemini-1.5-pro}

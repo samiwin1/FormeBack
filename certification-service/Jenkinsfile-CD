@@ -1,0 +1,58 @@
+﻿// CD Pipeline — certification-service
+// Stages: Docker Login → Push Image → Stop old container → Run new container
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME      = "YOUR_DOCKERHUB_USERNAME/certification:latest"
+        CONTAINER_NAME  = "certification-container"
+        CONTAINER_PORT  = "8090"   // must match EXPOSE in Dockerfile and server.port
+        HOST_PORT       = "8090"
+        NETWORK         = "pi2-network"
+    }
+
+    stages {
+
+        stage('Docker Login') {
+            steps {
+                // 'dockerhub-credentials' = Jenkins credential ID (Username + Password).
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                sh "docker push ${IMAGE_NAME}"
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                // Remove old container if it exists (ignore error if it doesn't).
+                sh """
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm   ${CONTAINER_NAME} || true
+                """
+                // Run fresh container on pi2-network so services can reach each other.
+                sh """
+                    docker run -d \\
+                      --name ${CONTAINER_NAME} \\
+                      --network ${NETWORK} \\
+                      -p ${HOST_PORT}:${CONTAINER_PORT} \\
+                      ${IMAGE_NAME}
+                """
+            }
+        }
+    }
+
+    post {
+        failure { echo 'CD pipeline failed — check Docker logs.' }
+        success { echo "certification-container is running on port ${HOST_PORT}." }
+    }
+}
