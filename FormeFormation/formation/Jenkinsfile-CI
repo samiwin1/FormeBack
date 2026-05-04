@@ -15,15 +15,7 @@ pipeline {
 
     stages {
 
-        stage('1 — Checkout') {
-            steps {
-                git branch: 'Devops_Formation',
-                    url: 'https://github.com/samiwin1/FormeBack.git'
-                echo 'Code retrieved from GitHub'
-            }
-        }
-
-        stage('2 — Build') {
+        stage('1 — Build') {
             steps {
                 dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn clean package -DskipTests'
@@ -32,7 +24,7 @@ pipeline {
             }
         }
 
-        stage('3 — Tests + Coverage') {
+        stage('2 — Tests + Coverage') {
             steps {
                 dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn verify jacoco:report'
@@ -48,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('4 — SonarQube Analysis') {
+        stage('3 — SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     dir("FormeFormation/${MS_NAME}") {
@@ -63,7 +55,7 @@ pipeline {
             }
         }
 
-        stage('5 — Quality Gate') {
+        stage('4 — Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: false
@@ -71,7 +63,7 @@ pipeline {
             }
         }
 
-        stage('6 — Docker Build') {
+        stage('5 — Docker Build') {
             steps {
                 dir('FormeFormation') {
                     sh "docker build -f formation/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ."
@@ -80,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('7 — Docker Push') {
+        stage('6 — Docker Push') {
             steps {
                 sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
                 sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
