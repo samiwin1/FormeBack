@@ -17,7 +17,7 @@ pipeline {
 
         stage('1 — Checkout') {
             steps {
-                git branch: 'main',
+                git branch: 'Devops_Formation',
                     url: 'https://github.com/samiwin1/FormeBack.git'
                 echo 'Code retrieved from GitHub'
             }
@@ -25,7 +25,7 @@ pipeline {
 
         stage('2 — Build') {
             steps {
-                dir("FormeBack/FormeFormation/${MS_NAME}") {
+                dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn clean package -DskipTests'
                     echo "Build complete: ${MS_NAME}"
                 }
@@ -34,13 +34,13 @@ pipeline {
 
         stage('3 — Tests + Coverage') {
             steps {
-                dir("FormeBack/FormeFormation/${MS_NAME}") {
+                dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn verify jacoco:report'
                 }
             }
             post {
                 always {
-                    junit "FormeBack/FormeFormation/${MS_NAME}/target/surefire-reports/*.xml"
+                    junit "FormeFormation/${MS_NAME}/target/surefire-reports/*.xml"
                 }
                 failure {
                     error 'Tests failed — stopping pipeline'
@@ -51,7 +51,7 @@ pipeline {
         stage('4 — SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    dir("FormeBack/FormeFormation/${MS_NAME}") {
+                    dir("FormeFormation/${MS_NAME}") {
                         sh """
                             mvn sonar:sonar \
                                 -Dsonar.projectKey=${SONAR_PROJECT} \
@@ -73,7 +73,7 @@ pipeline {
 
         stage('6 — Docker Build') {
             steps {
-                dir("FormeBack/FormeFormation") {
+                dir('FormeFormation') {
                     sh "docker build -f formation/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                     echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
                 }

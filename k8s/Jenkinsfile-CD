@@ -9,7 +9,7 @@ pipeline {
 
         stage('1 — Checkout Manifests') {
             steps {
-                git branch: 'main',
+                git branch: 'Devops_Formation',
                     url: 'https://github.com/samiwin1/FormeBack.git'
                 echo 'K8s manifests retrieved'
             }

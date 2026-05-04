@@ -118,14 +118,21 @@ services:
 
   # ── Jenkins (CI) — UI http://localhost:9080 ─────────────────────
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
+    build:
+      context: ./jenkins/docker
+      dockerfile: Dockerfile
+    image: forme-jenkins:lts-docker
     container_name: forme-jenkins
     restart: unless-stopped
+    # Lab setups: avoids permission errors on mounted docker.sock when running docker from pipelines
+    user: "0"
     ports:
       - "9080:8080"
       # Inbound-agent port 50000 not published — use only if remote agents connect (map e.g. 51000:50000)
     volumes:
       - jenkins_data:/var/jenkins_home
+      # Use host Docker engine from inside Jenkins (Compose / Docker Desktop)
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - forme-net
 
