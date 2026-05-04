@@ -1,21 +1,30 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     environment {
         DOCKER_CREDS = credentials('docker-hub-credentials')
     }
 
     stages {
 
-        stage('1 — Checkout Manifests') {
+        stage('1 — Clean Workspace') {
             steps {
-                git branch: 'Devops_Formation',
-                    url: 'https://github.com/samiwin1/FormeBack.git'
-                echo 'K8s manifests retrieved'
+                cleanWs()
             }
         }
 
-        stage('2 — Verify Images on DockerHub') {
+        stage('2 — Checkout') {
+            steps {
+                checkout scm
+                echo 'K8s manifests retrieved from SCM'
+            }
+        }
+
+        stage('3 — Verify Images on DockerHub') {
             steps {
                 sh "docker pull selmianas/formation:latest"
                 sh "docker pull selmianas/event:latest"
@@ -23,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('3 — Apply Namespace and Secrets') {
+        stage('4 — Apply Namespace and Secrets') {
             steps {
                 sh 'kubectl apply -f k8s/namespace.yaml'
                 sh 'kubectl apply -f k8s/secrets/'
@@ -31,14 +40,14 @@ pipeline {
             }
         }
 
-        stage('4 — Deploy Microservices') {
+        stage('5 — Deploy Microservices') {
             steps {
                 sh 'kubectl apply -f k8s/deployments/'
                 echo 'Deployments applied'
             }
         }
 
-        stage('5 — Wait for Pods Ready') {
+        stage('6 — Wait for Pods Ready') {
             steps {
                 sh 'kubectl rollout status deployment/formation -n pidev --timeout=120s'
                 sh 'kubectl rollout status deployment/event -n pidev --timeout=120s'
@@ -46,14 +55,14 @@ pipeline {
             }
         }
 
-        stage('6 — Deploy Monitoring') {
+        stage('7 — Deploy Monitoring') {
             steps {
                 sh 'kubectl apply -f k8s/monitoring/'
                 echo 'Prometheus and Grafana deployed'
             }
         }
 
-        stage('7 — Health Check') {
+        stage('8 — Health Check') {
             steps {
                 sh 'kubectl get pods -n pidev -o wide'
                 sh 'kubectl get services -n pidev'

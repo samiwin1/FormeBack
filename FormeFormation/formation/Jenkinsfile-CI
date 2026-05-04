@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     environment {
         MS_NAME        = 'formation_service'
         IMAGE_NAME     = 'selmianas/formation'
@@ -15,7 +19,20 @@ pipeline {
 
     stages {
 
-        stage('1 — Build') {
+        stage('1 — Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('2 — Checkout') {
+            steps {
+                checkout scm
+                echo 'Code retrieved from GitHub'
+            }
+        }
+
+        stage('3 — Build') {
             steps {
                 dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn clean package -DskipTests'
@@ -24,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('2 — Tests + Coverage') {
+        stage('4 — Tests + Coverage') {
             steps {
                 dir("FormeFormation/${MS_NAME}") {
                     sh 'mvn verify jacoco:report'
@@ -40,7 +57,7 @@ pipeline {
             }
         }
 
-        stage('3 — SonarQube Analysis') {
+        stage('5 — SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     dir("FormeFormation/${MS_NAME}") {
@@ -55,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('4 — Quality Gate') {
+        stage('6 — Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: false
@@ -63,7 +80,7 @@ pipeline {
             }
         }
 
-        stage('5 — Docker Build') {
+        stage('7 — Docker Build') {
             steps {
                 dir('FormeFormation') {
                     sh "docker build -f formation/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ."
@@ -72,7 +89,7 @@ pipeline {
             }
         }
 
-        stage('6 — Docker Push') {
+        stage('8 — Docker Push') {
             steps {
                 sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
                 sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
