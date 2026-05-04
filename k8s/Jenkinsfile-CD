@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDS = credentials('docker-hub-credentials')
+    }
+
+    stages {
+
+        stage('1 — Checkout Manifests') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/samiwin1/FormeBack.git'
+                echo 'K8s manifests retrieved'
+            }
+        }
+
+        stage('2 — Verify Images on DockerHub') {
+            steps {
+                sh "docker pull selmianas/formation:latest"
+                sh "docker pull selmianas/event:latest"
+                echo 'All images verified on DockerHub'
+            }
+        }
+
+        stage('3 — Apply Namespace and Secrets') {
+            steps {
+                sh 'kubectl apply -f k8s/namespace.yaml'
+                sh 'kubectl apply -f k8s/secrets/'
+                echo 'Namespace and secrets applied'
+            }
+        }
+
+        stage('4 — Deploy Microservices') {
+            steps {
+                sh 'kubectl apply -f k8s/deployments/'
+                echo 'Deployments applied'
+            }
+        }
+
+        stage('5 — Wait for Pods Ready') {
+            steps {
+                sh 'kubectl rollout status deployment/formation -n pidev --timeout=120s'
+                sh 'kubectl rollout status deployment/event -n pidev --timeout=120s'
+                echo 'All pods are running'
+            }
+        }
+
+        stage('6 — Deploy Monitoring') {
+            steps {
+                sh 'kubectl apply -f k8s/monitoring/'
+                echo 'Prometheus and Grafana deployed'
+            }
+        }
+
+        stage('7 — Health Check') {
+            steps {
+                sh 'kubectl get pods -n pidev -o wide'
+                sh 'kubectl get services -n pidev'
+                echo 'Formation accessible at: http://localhost:30081/actuator/health'
+                echo 'Event accessible at: http://localhost:30082/actuator/health'
+                echo 'Prometheus at: http://localhost:30090'
+                echo 'Grafana at: http://localhost:30300'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CD Pipeline SUCCESS — all services deployed on Kubernetes'
+        }
+        failure {
+            sh 'kubectl get events -n pidev --sort-by=.metadata.creationTimestamp | tail -20'
+            echo 'Check K8s events above to diagnose the failure'
+        }
+    }
+}

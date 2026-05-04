@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    environment {
+        MS_NAME        = 'formation_service'
+        IMAGE_NAME     = 'selmianas/formation'
+        IMAGE_TAG      = 'latest'
+        DOCKER_CREDS   = credentials('docker-hub-credentials')
+        SONAR_PROJECT  = 'formation'
+    }
+
+    tools {
+        maven 'M3'
+    }
+
+    stages {
+
+        stage('1 — Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/samiwin1/FormeBack.git'
+                echo 'Code retrieved from GitHub'
+            }
+        }
+
+        stage('2 — Build') {
+            steps {
+                dir("FormeBack/FormeFormation/${MS_NAME}") {
+                    sh 'mvn clean package -DskipTests'
+                    echo "Build complete: ${MS_NAME}"
+                }
+            }
+        }
+
+        stage('3 — Tests + Coverage') {
+            steps {
+                dir("FormeBack/FormeFormation/${MS_NAME}") {
+                    sh 'mvn verify jacoco:report'
+                }
+            }
+            post {
+                always {
+                    junit "FormeBack/FormeFormation/${MS_NAME}/target/surefire-reports/*.xml"
+                }
+                failure {
+                    error 'Tests failed — stopping pipeline'
+                }
+            }
+        }
+
+        stage('4 — SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    dir("FormeBack/FormeFormation/${MS_NAME}") {
+                        sh """
+                            mvn sonar:sonar \
+                                -Dsonar.projectKey=${SONAR_PROJECT} \
+                                -Dsonar.projectName=${SONAR_PROJECT} \
+                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('5 — Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+
+        stage('6 — Docker Build') {
+            steps {
+                dir("FormeBack/FormeFormation") {
+                    sh "docker build -f formation/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('7 — Docker Push') {
+            steps {
+                sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                echo "Image pushed to DockerHub: ${IMAGE_NAME}:${IMAGE_TAG}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline SUCCESS — ${IMAGE_NAME}:${IMAGE_TAG} is on DockerHub"
+        }
+        failure {
+            echo "Pipeline FAILED — check logs above"
+        }
+        always {
+            sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true"
+        }
+    }
+}

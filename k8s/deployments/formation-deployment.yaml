@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: formation
+  namespace: pidev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: formation
+  template:
+    metadata:
+      labels:
+        app: formation
+    spec:
+      containers:
+      - name: formation
+        image: selmianas/formation:latest
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: formation
+  namespace: pidev
+spec:
+  selector:
+    app: formation
+  ports:
+  - port: 8081
+    targetPort: 8081
+    nodePort: 30081
+  type: NodePort

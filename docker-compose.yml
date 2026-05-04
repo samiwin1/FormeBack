@@ -1,5 +1,3 @@
-version: '3.8'
-
 # ─────────────────────────────────────────────────────────────────
 # ForME – Microservices Docker Compose
 # Start order: mysql → eureka-server → api-gateway → user-service
@@ -97,7 +95,7 @@ services:
     networks:
       - forme-net
 
-  # â”€â”€ Article Service â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  # ── Article Service ─────────────────────────────────────────────
   article-service:
     build: ./article-service
     container_name: article-service
@@ -118,9 +116,23 @@ services:
     networks:
       - forme-net
 
+  # ── Jenkins (CI) — UI http://localhost:9080 ─────────────────────
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: forme-jenkins
+    restart: unless-stopped
+    ports:
+      - "9080:8080"
+      # Inbound-agent port 50000 not published — use only if remote agents connect (map e.g. 51000:50000)
+    volumes:
+      - jenkins_data:/var/jenkins_home
+    networks:
+      - forme-net
+
 networks:
   forme-net:
     driver: bridge
 
 volumes:
   mysql_data:
+  jenkins_data:

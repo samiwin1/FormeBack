@@ -1,0 +1,8 @@
+# Build
+**/target/
+**/build/
+
+# Kubeconfig (never commit cluster credentials)
+k8s/kubeconfig.yaml
+kubeconfig.yaml
+*.kubeconfig
