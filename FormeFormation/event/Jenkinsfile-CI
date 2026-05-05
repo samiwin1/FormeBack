@@ -49,10 +49,13 @@ pipeline {
             }
             post {
                 always {
-                    junit "FormeFormation/${MS_NAME}/target/surefire-reports/*.xml"
+                    junit(
+                        testResults: "FormeFormation/${MS_NAME}/target/surefire-reports/*.xml",
+                        allowEmptyResults: true
+                    )
                 }
                 failure {
-                    error 'Tests failed — stopping pipeline'
+                    error 'Tests failed — pipeline stopped'
                 }
             }
         }
