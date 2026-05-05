@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        skipDefaultCheckout(true)
+    }
+
     environment {
         IMAGE_NAME   = 'samiwin/certification-service'
         IMAGE_TAG    = 'latest'
@@ -11,25 +16,38 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Code checked out by Jenkins SCM'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    userRemoteConfigs: scm.userRemoteConfigs,
+                    extensions: [
+                        [$class: 'CloneOption', shallow: true, depth: 1, noTags: true, timeout: 20]
+                    ]
+                ])
             }
         }
 
         stage('Build') {
             steps {
-                bat 'mvn clean package -DskipTests -B'
+                dir('certification-service') {
+                    bat 'mvn clean package -DskipTests -B'
+                }
             }
         }
 
         stage('Tests') {
             steps {
-                bat 'mvn test -B'
+                dir('certification-service') {
+                    bat 'mvn test -B'
+                }
             }
         }
 
         stage('Docker Build') {
             steps {
-                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                dir('certification-service') {
+                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                }
             }
         }
 
@@ -44,13 +62,15 @@ pipeline {
 
     post {
         always {
-            bat "docker rmi %IMAGE_NAME%:%IMAGE_TAG% || exit 0"
+            node('') {
+                bat "docker rmi %IMAGE_NAME%:%IMAGE_TAG% || exit 0"
+            }
         }
         success {
-            echo 'CI Pipeline succeeded â€” image pushed to Docker Hub.'
+            echo 'CI Pipeline succeeded - image pushed to Docker Hub.'
         }
         failure {
-            echo 'CI Pipeline failed â€” check logs above.'
+            echo 'CI Pipeline failed - check logs above.'
         }
     }
 }
