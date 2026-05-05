@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: certification-service
+  namespace: devops
+spec:
+  selector:
+    app: certification-service
+  ports:
+    - port: 8090
+      targetPort: 8090
+      nodePort: 30092
+  type: NodePort

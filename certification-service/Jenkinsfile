@@ -1,42 +1,56 @@
-pipeline {
+﻿pipeline {
     agent any
+
     environment {
-        IMAGE_NAME = 'samiwin1/certification-service'
-        IMAGE_TAG = 'latest'
+        IMAGE_NAME   = 'samiwin/certification-service'
+        IMAGE_TAG    = 'latest'
         DOCKER_CREDS = credentials('dockerhub-credentials')
     }
+
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Code checked out'
+                echo 'Code checked out by Jenkins SCM'
             }
         }
+
         stage('Build') {
             steps {
-                dir('certification-service') {
-                    bat 'mvn clean package -DskipTests -B'
-                }
+                bat 'mvn clean package -DskipTests -B'
             }
         }
+
         stage('Tests') {
             steps {
-                dir('certification-service') {
-                    bat 'mvn test -B'
-                }
+                bat 'mvn test -B'
             }
         }
-        stage('Docker Build & Push') {
+
+        stage('Docker Build') {
             steps {
-                dir('certification-service') {
-                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
-                    bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
-                    bat "docker push %IMAGE_NAME%:%IMAGE_TAG%"
-                }
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
+                bat "docker push %IMAGE_NAME%:%IMAGE_TAG%"
+            }
+        }
+
     }
+
     post {
-        success { echo 'Pipeline succeeded!' }
-        failure { echo 'Pipeline failed.' }
+        always {
+            bat "docker rmi %IMAGE_NAME%:%IMAGE_TAG% || exit 0"
+        }
+        success {
+            echo 'CI Pipeline succeeded â€” image pushed to Docker Hub.'
+        }
+        failure {
+            echo 'CI Pipeline failed â€” check logs above.'
+        }
     }
 }

@@ -67,3 +67,18 @@ google:
     api-url: ${GOOGLE_AI_API_URL:https://generativelanguage.googleapis.com/v1beta}
     model: ${GOOGLE_AI_MODEL:gemini-2.0-flash}
     fallback-models: ${GOOGLE_AI_FALLBACK_MODELS:gemini-2.0-flash,gemini-1.5-flash,gemini-1.5-pro}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
