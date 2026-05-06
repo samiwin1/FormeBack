@@ -1,134 +1,256 @@
-pipeline {
-    agent any
-
-    options {
-        skipDefaultCheckout(true)
-    }
-
-    environment {
-        MS_NAME       = 'formation_service'
-        IMAGE_NAME    = 'selmianas/formation'
-        IMAGE_TAG     = 'latest'
-        DOCKER_CREDS  = credentials('docker-hub-credentials')
-        SONAR_PROJECT = 'formation'
-        DOCKERFILE    = 'formation/Dockerfile'
-    }
-
-    tools {
-        maven 'M3'
-    }
-
-    stages {
-
-        stage('1 — Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
-        stage('2 — Checkout') {
-            steps {
-                checkout scm
-                echo 'Code retrieved from GitHub'
-            }
-        }
-
-        stage('3 — Build') {
-            steps {
-                dir("FormeFormation/${MS_NAME}") {
-                    sh 'mvn clean package -DskipTests'
-                    echo "Build complete: ${MS_NAME}"
-                }
-            }
-        }
-
-        stage('4 — Tests + Coverage') {
-            steps {
-                dir("FormeFormation/${MS_NAME}") {
-                    sh 'mvn verify jacoco:report'
-                }
-            }
-            post {
-                always {
-                    junit(
-                        testResults: "FormeFormation/${MS_NAME}/target/surefire-reports/*.xml",
-                        allowEmptyResults: true
-                    )
-                }
-                failure {
-                    error 'Tests failed — pipeline stopped'
-                }
-            }
-        }
-
-        stage('5 — SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    dir("FormeFormation/${MS_NAME}") {
-                        sh """
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=${SONAR_PROJECT} \
-                                -Dsonar.projectName=${SONAR_PROJECT} \
-                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                        """
-                    }
-                }
-            }
-        }
-
-        stage('6 — Quality Gate') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('7 — Docker Build') {
-            steps {
-                echo 'If Jenkins runs in Docker, mount the host engine (e.g. Compose): /var/run/docker.sock:/var/run/docker.sock'
-                sh '''
-                    if ! command -v docker >/dev/null 2>&1; then
-                        echo "ERROR: Docker CLI is not installed or not on PATH"
-                        exit 1
-                    fi
-                    docker version
-                '''
-                dir('FormeFormation') {
-                    sh """
-                        docker build -f ${DOCKERFILE} \
-                            -t ${IMAGE_NAME}:${IMAGE_TAG} \
-                            .
-                    """
-                    echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
-                }
-            }
-        }
-
-        stage('8 — Docker Push') {
-            steps {
-                sh '''
-                    if ! command -v docker >/dev/null 2>&1; then
-                        echo "ERROR: Docker CLI is not installed or not on PATH"
-                        exit 1
-                    fi
-                '''
-                sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
-                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                echo "Image pushed to DockerHub: ${IMAGE_NAME}:${IMAGE_TAG}"
-            }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline SUCCESS — ${IMAGE_NAME}:${IMAGE_TAG} is on DockerHub"
-        }
-        failure {
-            echo "Pipeline FAILED — check logs above"
-        }
-        always {
-            sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true"
-        }
-    }
-}
+pipeline {
+
+    agent any
+
+
+
+    options {
+
+        skipDefaultCheckout(true)
+
+    }
+
+
+
+    environment {
+
+        MS_NAME       = 'formation_service'
+
+        IMAGE_NAME    = 'selmianas/formation'
+
+        IMAGE_TAG     = 'latest'
+
+        DOCKER_CREDS  = credentials('docker-hub-credentials')
+
+        DOCKERFILE    = 'formation/Dockerfile'
+
+    }
+
+
+
+    tools {
+
+        maven 'M3'
+
+    }
+
+
+
+    stages {
+
+
+
+        stage('1 — Clean Workspace') {
+
+            steps {
+
+                cleanWs()
+
+            }
+
+        }
+
+
+
+        stage('2 — Checkout') {
+
+            steps {
+
+                checkout scm
+
+                echo 'Code retrieved from GitHub'
+
+            }
+
+        }
+
+
+
+        stage('3 — Build') {
+
+            steps {
+
+                dir("FormeFormation/${MS_NAME}") {
+
+                    sh 'mvn clean package -DskipTests'
+
+                    echo "Build complete: ${MS_NAME}"
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('4 — Tests + Coverage') {
+
+            steps {
+
+                dir("FormeFormation/${MS_NAME}") {
+
+                    sh 'mvn verify jacoco:report'
+
+                }
+
+            }
+
+            post {
+
+                always {
+
+                    junit(
+
+                        testResults: "FormeFormation/${MS_NAME}/target/surefire-reports/*.xml",
+
+                        allowEmptyResults: true
+
+                    )
+
+                }
+
+                failure {
+
+                    error 'Tests failed — pipeline stopped'
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('5 — SonarQube Analysis') {
+
+            steps {
+
+                withSonarQubeEnv('SonarQube') {
+
+                    dir("FormeFormation/${MS_NAME}") {
+
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=formation -Dsonar.projectName=formation -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml'
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('6 — Quality Gate') {
+
+            steps {
+
+                timeout(time: 15, unit: 'MINUTES') {
+
+                    waitForQualityGate abortPipeline: true
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('7 — Docker Build') {
+
+            steps {
+
+                echo 'If Jenkins runs in Docker, mount the host engine (e.g. Compose): /var/run/docker.sock:/var/run/docker.sock'
+
+                sh '''
+
+                    if ! command -v docker >/dev/null 2>&1; then
+
+                        echo "ERROR: Docker CLI is not installed or not on PATH"
+
+                        exit 1
+
+                    fi
+
+                    docker version
+
+                '''
+
+                dir('FormeFormation') {
+
+                    sh """
+
+                        docker build -f ${DOCKERFILE} \
+
+                            -t ${IMAGE_NAME}:${IMAGE_TAG} \
+
+                            .
+
+                    """
+
+                    echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('8 — Docker Push') {
+
+            steps {
+
+                sh '''
+
+                    if ! command -v docker >/dev/null 2>&1; then
+
+                        echo "ERROR: Docker CLI is not installed or not on PATH"
+
+                        exit 1
+
+                    fi
+
+                '''
+
+                sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
+
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+
+                echo "Image pushed to DockerHub: ${IMAGE_NAME}:${IMAGE_TAG}"
+
+            }
+
+        }
+
+    }
+
+
+
+    post {
+
+        success {
+
+            echo "Pipeline SUCCESS — ${IMAGE_NAME}:${IMAGE_TAG} is on DockerHub"
+
+        }
+
+        failure {
+
+            echo "Pipeline FAILED — check logs above"
+
+        }
+
+        always {
+
+            sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true"
+
+        }
+
+    }
+
+}
+
