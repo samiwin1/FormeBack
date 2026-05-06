@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = 'C:\\Users\\dhafe\\.kube\\config'
+        K8S_DIR    = 'certification-service\\k8s'
+    }
+
     stages {
 
         stage('Checkout Manifests') {
@@ -11,21 +16,20 @@ pipeline {
 
         stage('Deploy MySQL') {
             steps {
-                bat 'kubectl apply -f k8s\\mysql-deployment.yaml'
+                bat "kubectl apply -f %K8S_DIR%\\mysql-deployment.yaml -n devops"
             }
         }
 
         stage('Deploy certification-service') {
             steps {
-                bat 'kubectl apply -f k8s\\certification-secret.yaml'
-                bat 'kubectl apply -f k8s\\certification-deployment.yaml'
-                bat 'kubectl apply -f k8s\\certification-service-svc.yaml'
+                bat "kubectl apply -f %K8S_DIR%\\certification-deployment.yaml -n devops"
+                bat "kubectl apply -f %K8S_DIR%\\certification-service-svc.yaml -n devops"
             }
         }
 
         stage('Rollout Status') {
             steps {
-                bat 'kubectl rollout status deployment/certification-service -n devops --timeout=120s'
+                bat 'kubectl rollout status deployment/certification-service -n devops --timeout=180s'
             }
         }
 
