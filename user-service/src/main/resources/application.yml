@@ -5,14 +5,17 @@ spring:
   application:
     name: user-service
 
-  # ── Database ──────────────────────────────────────────────────────────────
+    servlet:
+       multipart:
+         max-file-size: 5MB
+         max-request-size: 6MB
+
   datasource:
     url: jdbc:mysql://localhost:3306/forme?useUnicode=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
-    password:                 # fill in your MySQL password if needed
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # ── JPA / Hibernate ───────────────────────────────────────────────────────
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,23 +25,19 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
 
-# ── JWT ──────────────────────────────────────────────────────────────────────
 app:
   jwt:
-    secret: ThisIsA32+CharSecretKeyChangeMeNow!!!
+    secret: ${APP_JWT_SECRET:ChangeMeForLocalDevOnlySecretKey12345}
     expiration-minutes: 120
   bootstrap:
     superadmin:
-      email: superadmin@forme.tn
-      password: SuperAdmin123!
-      firstName: Super
-      lastName: Admin
-
-  # ✅ reCAPTCHA Secret Key
+      email: ${BOOTSTRAP_SUPERADMIN_EMAIL:superadmin@forme.tn}
+      password: ${BOOTSTRAP_SUPERADMIN_PASSWORD:ChangeMe123!}
+      firstName: ${BOOTSTRAP_SUPERADMIN_FIRST_NAME:Super}
+      lastName: ${BOOTSTRAP_SUPERADMIN_LAST_NAME:Admin}
   recaptcha:
-    secret-key: 6Ldiv34sAAAAAN1uBv4o31Ewi3YHuYcvwDWpnlez
+    secret-key: ${RECAPTCHA_SECRET_KEY:test-recaptcha-secret}
 
-# ── Eureka Client ─────────────────────────────────────────────────────────
 eureka:
   client:
     service-url:
@@ -49,12 +48,17 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
 
-# ── Actuator ──────────────────────────────────────────────────────────────
 management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: health, info, prometheus
   endpoint:
     health:
       show-details: always
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
