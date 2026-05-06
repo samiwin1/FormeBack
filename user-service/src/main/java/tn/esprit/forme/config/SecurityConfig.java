@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/actuator", "/actuator/**").permitAll()
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole("SUPER_ADMIN")
                         .requestMatchers("/super-admin/**", "/api/superadmin/**").hasRole("SUPER_ADMIN")
