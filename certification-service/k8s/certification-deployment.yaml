@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certification-service
+  namespace: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certification-service
+  template:
+    metadata:
+      labels:
+        app: certification-service
+    spec:
+      containers:
+        - name: certification-service
+          image: samiwin/certification-service:latest
+          ports:
+            - containerPort: 8090
+          env:
+            - name: DB_URL
+              value: "jdbc:mysql://mysql-certification:3306/forme_certification1?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-certification:3306/forme_certification1?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false"
+            - name: DB_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: DB_PASSWORD
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "root"
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: "com.mysql.cj.jdbc.Driver"
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: "org.hibernate.dialect.MySQLDialect"
+            - name: JWT_SECRET
+              value: "prod-secret-key-minimum-32-chars-long"
+            - name: APP_EMAIL_ENABLED
+              value: "false"
+            - name: APP_FLYWAY_ENABLED
+              value: "false"
+            - name: MAIL_PASSWORD
+              value: "dummy"
+            - name: GOOGLE_AI_API_KEY
+              value: "dummy"
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "false"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "false"
+            - name: MANAGEMENT_HEALTH_EUREKA_ENABLED
+              value: "false"
+            - name: MANAGEMENT_HEALTH_MAIL_ENABLED
+              value: "false"
+          startupProbe:
+            tcpSocket:
+              port: 8090
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8090
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 0
+            periodSeconds: 15
+            failureThreshold: 5
