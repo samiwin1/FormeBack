@@ -1,203 +1,132 @@
-# ForME – Microservices Architecture (Séance 2)
+# ForME – Professional Training & Certification Platform
 
-## Architecture Overview
+## Overview
+
+This project was developed as part of the PIDEV – 2nd Year Engineering Program at **Esprit School of Engineering** (Academic Year 2025–2026).
+
+ForME is a full-stack, AI-powered e-learning platform designed to help professionals and learners discover training programs, earn certifications, track their progress, and receive personalized mentoring. The platform connects learners, administrators, and partners through a unified ecosystem built on a modern microservices architecture.
+
+## Features
+
+- **Authentication & Role Management** – JWT-based authentication with role hierarchy (SuperAdmin, Admin, User)
+- **Formation Catalog** – Browse, enroll in, and complete training programs with AI-assisted content generation
+- **Exams & Evaluations** – Take exams, get scored results, and view detailed performance analytics
+- **Certification** – Automatic PDF certificate generation upon successful course completion
+- **AI Mentor** – Personalized AI-powered mentor (powered by Google Gemini) offering adaptive study plans, skill gap analysis, learning streak tracking, and portfolio management
+- **Events Management** – Create and manage professional events with partner sponsorship and tiered participation
+- **Admin Dashboard** – Real-time analytics, learner funnel visualization, geographic learner map, AI insights, marketing content creator, and RAG-based assistant
+- **Notifications** – In-app notification system for learners and admins
+- **Formation Demands** – Learners can request new training topics reviewed by admins
+
+## Tech Stack
+
+### Frontend
+
+- Angular 17+ (TypeScript)
+- Bootstrap & Bootstrap Icons
+- Chart.js (analytics charts)
+- Angular Router with lazy-loaded feature modules
+
+### Backend
+
+- Java 17
+- Spring Boot 3.2
+- Spring Cloud 2023 (Eureka, API Gateway)
+- Spring Security + JWT
+- Spring Data JPA
+- MySQL 8
+- Google Gemini AI (generative AI features)
+- iText / PDF generation (certification service)
+- Docker & Docker Compose
+
+## Architecture
+
+ForME follows a **microservices architecture** with the following services:
+
+| Service | Port | Responsibility |
+|---|---|---|
+| `eureka-server` | 8761 | Service discovery & registry |
+| `api-gateway` | 8080 | Single entry point, routing & JWT validation |
+| `user-service` | 8081 | User registration, login, role management |
+| `formation-service` | — | Training catalog, exams, evaluations, AI generation |
+| `events-service` | — | Professional events, partners, participants, deposits |
+| `certification-service` | — | Certificate issuance and PDF generation |
+| `mentor-service` | — | AI mentor, study plans, streaks, portfolios, skill tracking |
+
+All services register with Eureka and communicate through the API Gateway. The system is fully containerized with Docker Compose, including a managed MySQL instance with health-checked startup ordering.
 
 ```
-Client (Postman / Frontend)
-          │
-          ▼  :8080
-   ┌─────────────┐
-   │  API Gateway │   ← routes all traffic
-   └──────┬──────┘
-          │  discovers services via Eureka
-          ▼  :8761
-   ┌─────────────┐
-   │Eureka Server│   ← service registry
-   └──────┬──────┘
-          │  registered services
-          ▼  :8081
-   ┌─────────────┐
-   │ User Service│   ← auth, users, roles (your original backend)
-   └──────┬──────┘
-          │
-          ▼  :3306
-       MySQL
+Client (Angular)
+      │
+      ▼
+ API Gateway (:8080)
+      │
+      ├──► User Service
+      ├──► Formation Service
+      ├──► Events Service
+      ├──► Certification Service
+      └──► Mentor Service
+                │
+         Eureka Server (:8761)
+                │
+           MySQL (:3306)
 ```
 
----
+## Contributors
 
-## Project Structure
+| Name | Role |
+|---|---|
+| — | User & Authentication Service |
+| — | Formation & Evaluation Service |
+| — | Events Service |
+| — | Certification Service |
+| — | Mentor & AI Service |
+| — | Frontend (Angular) |
 
-```
-forme-microservices/
-├── pom.xml                  ← Parent Maven POM (manages all modules)
-├── docker-compose.yml       ← DevOps: orchestrates all containers
-│
-├── eureka-server/           ← Module 1: Service Discovery (port 8761)
-│   ├── pom.xml
-│   ├── Dockerfile
-│   └── src/main/
-│       ├── java/tn/esprit/eurekaserver/EurekaServerApplication.java
-│       └── resources/application.yml
-│
-├── api-gateway/             ← Module 2: API Gateway (port 8080)
-│   ├── pom.xml
-│   ├── Dockerfile
-│   └── src/main/
-│       ├── java/tn/esprit/gateway/ApiGatewayApplication.java
-│       └── resources/application.yml
-│
-└── user-service/            ← Module 3: User Microservice (port 8081)
-    ├── pom.xml
-    ├── Dockerfile
-    └── src/main/
-        ├── java/tn/esprit/forme/   ← All your original source code
-        └── resources/application.yml
-```
+## Academic Context
 
----
+Developed at *Esprit School of Engineering – Tunisia*
+PIDEV – 3A | 2025–2026
 
-## Running Locally (without Docker)
-
-> Start services **in this exact order**.
-
-### 1. Start Eureka Server
-```bash
-cd eureka-server
-mvn spring-boot:run
-# → Open http://localhost:8761 to see the Eureka dashboard
-```
-
-### 2. Start API Gateway
-```bash
-cd api-gateway
-mvn spring-boot:run
-# → Gateway now listens on http://localhost:8080
-```
-
-### 3. Start User Service
-```bash
-cd user-service
-mvn spring-boot:run
-# → Service registers itself with Eureka automatically
-# → Refresh http://localhost:8761 → you should see USER-SERVICE listed
-```
-
----
-
-## Running with Docker (DevOps approach)
+## Getting Started
 
 ### Prerequisites
-- Docker Desktop installed and running
-- Build the JARs first:
+
+- Docker & Docker Compose installed
+- Node.js 18+ and npm (for the frontend)
+
+### Run the Backend (Docker Compose)
+
 ```bash
-# From the root of forme-microservices/
-mvn clean package -DskipTests
+cd FormeBack/FormeBack
+docker compose up --build
 ```
 
-### Start everything
+This will start MySQL, Eureka Server, API Gateway, and User Service in the correct order.
+
+### Run the Frontend
+
 ```bash
-docker-compose up --build
+cd FormeFront
+npm install
+npm start
 ```
 
-### Stop everything
-```bash
-docker-compose down
-```
+The frontend will be available at `http://localhost:4200`.
 
----
+### Default Ports
 
-## Testing the Routing via Gateway
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:4200 |
+| API Gateway | http://localhost:8080 |
+| Eureka Dashboard | http://localhost:8761 |
 
-All requests go through the **API Gateway on port 8080**.
-The gateway forwards them to the **user-service on port 8081**.
+## Acknowledgments
 
-### Register a new user
-```
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@test.com",
-  "password": "Password123!"
-}
-```
-
-### Login
-```
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "email": "john.doe@test.com",
-  "password": "Password123!"
-}
-```
-
-### Get current user (authenticated)
-```
-GET http://localhost:8080/api/users/me
-Authorization: Bearer <token_from_login>
-```
-
-### Login as Super Admin
-```
-POST http://localhost:8080/api/auth/login
-{
-  "email": "superadmin@forme.tn",
-  "password": "SuperAdmin123!"
-}
-```
-
----
-
-## Port Summary
-
-| Service       | Port  | URL                          |
-|---------------|-------|------------------------------|
-| Eureka Server | 8761  | http://localhost:8761        |
-| API Gateway   | 8080  | http://localhost:8080        |
-| User Service  | 8081  | http://localhost:8081 (direct)|
-| MySQL         | 3306  | jdbc:mysql://localhost:3306  |
-
----
-
-## Key Spring Cloud Concepts Used
-
-**Eureka Server** (`@EnableEurekaServer`)
-- Acts as the phone book of the system
-- All services register here on startup
-- Dashboard shows all registered instances
-
-**Eureka Client** (`@EnableDiscoveryClient`)
-- Added to both `api-gateway` and `user-service`
-- Services announce themselves to Eureka with their IP + port
-
-**API Gateway** (Spring Cloud Gateway)
-- Single entry point for all clients
-- Routes `/api/auth/**` → `user-service`
-- Routes `/api/users/**` → `user-service`
-- Uses `lb://user-service` URI (lb = load balancer, resolves via Eureka)
-- Auto-discovery also enabled: any service in Eureka is reachable at `/<service-name>/**`
-
----
-
-## DevOps – Docker Notes
-
-Each service has a `Dockerfile` using the lightweight `eclipse-temurin:17-jre-alpine` image.
-
-`docker-compose.yml` defines:
-- **Health checks** so services wait for their dependencies before starting
-- **Environment variable overrides** to switch from `localhost` to container hostnames
-- **A shared bridge network** (`forme-net`) so containers can reach each other by name
-- **A named volume** for MySQL data persistence
-
-### Useful Docker commands
-```bash
-docker ps                          # see running containers
-docker logs eureka-server          # check eureka logs
-docker logs user-service           # check user-service logs
-docker-compose down -v             # stop and remove volumes (fresh DB)
-```
+- [Spring Boot](https://spring.io/projects/spring-boot) – Backend framework
+- [Spring Cloud Netflix Eureka](https://spring.io/projects/spring-cloud-netflix) – Service discovery
+- [Angular](https://angular.io/) – Frontend framework
+- [Google Gemini](https://deepmind.google/technologies/gemini/) – Generative AI features
+- [Docker](https://www.docker.com/) – Containerization
+- Esprit School of Engineering – for the academic framework and support
